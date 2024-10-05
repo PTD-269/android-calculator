@@ -25,6 +25,7 @@ class CalculatorScreen extends StatefulWidget {
 class _CalculatorScreenState extends State<CalculatorScreen> {
   String _expression = '';
   String _result = '';
+  bool _showMoreButtons = false; // State variable for More button
 
   void _onButtonPressed(String buttonText) {
     setState(() {
@@ -41,7 +42,6 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
 
   void _calculateResult() {
     String jsonInput = json.encode({'expression': _expression});
-
     String jsonOutput = CalculatorLogic.processExpression(jsonInput);
     Map<String, dynamic> output = json.decode(jsonOutput);
 
@@ -51,6 +51,12 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
       } else {
         _result = output['result'];
       }
+    });
+  }
+
+  void _toggleMoreButtons() {
+    setState(() {
+      _showMoreButtons = !_showMoreButtons;
     });
   }
 
@@ -85,33 +91,64 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
           ),
           Column(
             children: [
+              if (_showMoreButtons)
+                Column(
+                  children: [
+                    Row(
+                      children: [
+                        _buildButton('Button 1'), // Replace with actual buttons
+                        _buildButton('Button 2'),
+                        _buildButton('Button 3'),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        _buildButton('Button 4'),
+                        _buildButton('Button 5'),
+                        _buildButton('Button 6'),
+                      ],
+                    ),
+                  ],
+                ),
+
+              // Row for the "More" button to align it to the left
+              Row(
+                children: [
+                  ElevatedButton(
+                    child: Text('More'),
+                    onPressed: _toggleMoreButtons,
+                  ),
+                ],
+              ),
+
+              // Calculator buttons
               Row(children: [
                 _buildButton('7'),
                 _buildButton('8'),
                 _buildButton('9'),
-                _buildButton('/')
+                _buildButton('/'),
               ]),
               Row(children: [
                 _buildButton('4'),
                 _buildButton('5'),
                 _buildButton('6'),
-                _buildButton('*')
+                _buildButton('*'),
               ]),
               Row(children: [
                 _buildButton('1'),
                 _buildButton('2'),
                 _buildButton('3'),
-                _buildButton('-')
+                _buildButton('-'),
               ]),
               Row(children: [
                 _buildButton('.'),
                 _buildButton('0'),
                 _buildButton('C'),
-                _buildButton('+')
+                _buildButton('+'),
               ]),
               Row(children: [_buildButton('=')]),
             ],
-          )
+          ),
         ],
       ),
     );
