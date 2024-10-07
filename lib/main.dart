@@ -96,16 +96,16 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                   children: [
                     Row(
                       children: [
-                        _buildButton('Button 1'), // Replace with actual buttons
-                        _buildButton('Button 2'),
-                        _buildButton('Button 3'),
+                        _buildButton('Ans'),
+                        _buildButton('π'),
+                        _buildButton('x²'),
                       ],
                     ),
                     Row(
                       children: [
-                        _buildButton('Button 4'),
-                        _buildButton('Button 5'),
-                        _buildButton('Button 6'),
+                        _buildButton('%'),
+                        _buildButton('x!'),
+                        _buildButton('E'),
                       ],
                     ),
                   ],
@@ -132,7 +132,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                 _buildButton('4'),
                 _buildButton('5'),
                 _buildButton('6'),
-                _buildButton('*'),
+                _buildButton('X'),
               ]),
               Row(children: [
                 _buildButton('1'),
