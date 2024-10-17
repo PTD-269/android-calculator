@@ -12,7 +12,7 @@ class CalculatorApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Demo Flutter Calculator',
+      title: 'Máy tính Flutter',
       theme: ThemeData(primarySwatch: Colors.blue),
       home: const CalculatorScreen(),
     );
@@ -30,7 +30,7 @@ class _CalculatorScreenState extends State<CalculatorScreen>
     with SingleTickerProviderStateMixin {
   String _expression = '';
   String _result = '';
-  bool _showMoreButtons = false; //
+  bool _showMoreButtons = false; // Biến trạng thái cho nút "More"
 
   late TabController _tabController;
 
@@ -38,7 +38,7 @@ class _CalculatorScreenState extends State<CalculatorScreen>
   void initState() {
     super.initState();
     _tabController = TabController(
-        length: 3, vsync: this); // size of tab bar
+        length: 3, vsync: this); // Ba tab: Cơ bản, Nhị phân, Tiền tệ
   }
 
   void _onButtonPressed(String buttonText) {
@@ -70,14 +70,17 @@ class _CalculatorScreenState extends State<CalculatorScreen>
 
   Widget _buildButton(String buttonText) {
     return Expanded(
-      child: ElevatedButton(
-        child: Text(buttonText),
-        onPressed: () => _onButtonPressed(buttonText),
+      flex: 1,
+      child: Padding(
+        padding: const EdgeInsets.all(4.0),
+        child: ElevatedButton(
+          child: Text(buttonText),
+          onPressed: () => _onButtonPressed(buttonText),
+        ),
       ),
     );
   }
 
-  // basic cal
   Widget _buildBasicCalculatorUI() {
     return Column(
       children: [
@@ -124,7 +127,7 @@ class _CalculatorScreenState extends State<CalculatorScreen>
         Row(
           children: [
             ElevatedButton(
-              child: Text(_showMoreButtons ? 'Less' : 'More'),
+              child: Text(_showMoreButtons ? 'Ít hơn' : 'Thêm'),
               onPressed: () {
                 setState(() {
                   _showMoreButtons = !_showMoreButtons;
@@ -137,27 +140,49 @@ class _CalculatorScreenState extends State<CalculatorScreen>
     );
   }
 
-  // Xây dựng giao diện máy tính nhị phân
-  Widget _buildBinaryCalculatorUI() {
+  Widget _buildProgrammerCalculatorUI() {
     return Column(
       children: [
+        // Row for Hexadecimal input
         Row(children: [
-          _buildButton('0'),
-          _buildButton('1'),
+          _buildButton('A'),
+          _buildButton('B'),
           _buildButton('C'),
-          _buildButton('=')
+          _buildButton('D'),
         ]),
         Row(children: [
-          _buildButton('+'),
-          _buildButton('-'),
-          _buildButton('*'),
-          _buildButton('/')
+          _buildButton('E'),
+          _buildButton('F'),
+          _buildButton('C'), // Clear button
+          _buildButton('='), // Equals button
         ]),
+
+        // Row for number systems and bitwise operations
+        Row(children: [
+          _buildButton('DEC'), // Decimal button
+          _buildButton('HEX'), // Hexadecimal button
+          _buildButton('OCT'), // Octal button
+          _buildButton('BIN'), // Binary button
+        ]),
+
+        // Additional programmer-specific operations
         Row(children: [
           _buildButton('AND'),
           _buildButton('OR'),
           _buildButton('XOR'),
-          _buildButton('NOT')
+          _buildButton('NOT'),
+        ]),
+
+        Row(children: [
+          _buildButton('<<'), // Left shift
+          _buildButton('>>'), // Right shift
+          _buildButton('+'),
+          _buildButton('-'),
+        ]),
+
+        Row(children: [
+          _buildButton('*'),
+          _buildButton('/'),
         ]),
       ],
     );
@@ -239,11 +264,11 @@ class _CalculatorScreenState extends State<CalculatorScreen>
             ),
             const Divider(),
 
-            // Tab bar css
+
             Padding(
               padding: const EdgeInsets.symmetric(
                   vertical:
-                  8.0),
+                  8.0), // Điều chỉnh giá trị này để xích thanh trượt lên trên
               child: TabBar(
                 controller: _tabController,
                 indicatorColor:
@@ -251,21 +276,21 @@ class _CalculatorScreenState extends State<CalculatorScreen>
                 tabs: const [
                   Tab(text: 'Basic'),
                   Tab(text: 'Binary'),
-                  Tab(text: 'Currency'),
+                  Tab(text: 'Currency'), // Thêm tab cho máy tính tiền tệ
                 ],
               ),
             ),
 
-            // Tab bar content
+
             SizedBox(
               height: MediaQuery.of(context).size.height *
-                  0.5, // (option: edit height)
+                  0.5, // Điều chỉnh chiều cao nếu cần
               child: TabBarView(
                 controller: _tabController,
                 children: [
                   _buildBasicCalculatorUI(),
-                  _buildBinaryCalculatorUI(),
-                  _buildCurrencyCalculatorUI(),
+                  _buildProgrammerCalculatorUI(),
+                  _buildCurrencyCalculatorUI(), // Gọi giao diện máy tính tiền tệ
                 ],
               ),
             ),
