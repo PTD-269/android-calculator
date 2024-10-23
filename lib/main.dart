@@ -12,7 +12,7 @@ class CalculatorApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Máy tính Flutter',
+      title: 'Flutter Calculator',
       theme: ThemeData(primarySwatch: Colors.blue),
       home: const CalculatorScreen(),
     );
@@ -26,20 +26,11 @@ class CalculatorScreen extends StatefulWidget {
   _CalculatorScreenState createState() => _CalculatorScreenState();
 }
 
-class _CalculatorScreenState extends State<CalculatorScreen>
-    with SingleTickerProviderStateMixin {
+class _CalculatorScreenState extends State<CalculatorScreen> {
   String _expression = '';
   String _result = '';
   bool _showMoreButtons = false; // Biến trạng thái cho nút "More"
-
-  late TabController _tabController;
-
-  @override
-  void initState() {
-    super.initState();
-    _tabController = TabController(
-        length: 3, vsync: this); // Ba tab: Cơ bản, Nhị phân, Tiền tệ
-  }
+  int _selectedIndex = 0; // Chỉ mục của trang được chọn (Binary, Currency)
 
   void _onButtonPressed(String buttonText) {
     setState(() {
@@ -68,19 +59,7 @@ class _CalculatorScreenState extends State<CalculatorScreen>
     });
   }
 
-  Widget _buildButton(String buttonText) {
-    return Expanded(
-      flex: 1,
-      child: Padding(
-        padding: const EdgeInsets.all(4.0),
-        child: ElevatedButton(
-          child: Text(buttonText),
-          onPressed: () => _onButtonPressed(buttonText),
-        ),
-      ),
-    );
-  }
-
+  // Hiển thị UI máy tính cơ bản
   Widget _buildBasicCalculatorUI() {
     return Column(
       children: [
@@ -88,25 +67,25 @@ class _CalculatorScreenState extends State<CalculatorScreen>
           _buildButton('7'),
           _buildButton('8'),
           _buildButton('9'),
-          _buildButton('/')
+          _buildButton('/'),
         ]),
         Row(children: [
           _buildButton('4'),
           _buildButton('5'),
           _buildButton('6'),
-          _buildButton('X')
+          _buildButton('X'),
         ]),
         Row(children: [
           _buildButton('1'),
           _buildButton('2'),
           _buildButton('3'),
-          _buildButton('-')
+          _buildButton('-'),
         ]),
         Row(children: [
           _buildButton('.'),
           _buildButton('0'),
           _buildButton('C'),
-          _buildButton('+')
+          _buildButton('+'),
         ]),
         Row(children: [_buildButton('=')]),
         if (_showMoreButtons)
@@ -115,19 +94,19 @@ class _CalculatorScreenState extends State<CalculatorScreen>
               Row(children: [
                 _buildButton('Ans'),
                 _buildButton('π'),
-                _buildButton('x²')
+                _buildButton('x²'),
               ]),
               Row(children: [
                 _buildButton('%'),
                 _buildButton('x!'),
-                _buildButton('E')
+                _buildButton('E'),
               ]),
             ],
           ),
         Row(
           children: [
             ElevatedButton(
-              child: Text(_showMoreButtons ? 'Ít hơn' : 'Thêm'),
+              child: Text(_showMoreButtons ? 'Less' : 'More'),
               onPressed: () {
                 setState(() {
                   _showMoreButtons = !_showMoreButtons;
@@ -140,10 +119,10 @@ class _CalculatorScreenState extends State<CalculatorScreen>
     );
   }
 
+  // Hiển thị UI máy tính nhị phân
   Widget _buildProgrammerCalculatorUI() {
     return Column(
       children: [
-        // Row for Hexadecimal input
         Row(children: [
           _buildButton('A'),
           _buildButton('B'),
@@ -153,33 +132,27 @@ class _CalculatorScreenState extends State<CalculatorScreen>
         Row(children: [
           _buildButton('E'),
           _buildButton('F'),
-          _buildButton('C'), // Clear button
-          _buildButton('='), // Equals button
+          _buildButton('C'), // Nút Clear
+          _buildButton('='), // Nút Equals
         ]),
-
-        // Row for number systems and bitwise operations
         Row(children: [
-          _buildButton('DEC'), // Decimal button
-          _buildButton('HEX'), // Hexadecimal button
-          _buildButton('OCT'), // Octal button
-          _buildButton('BIN'), // Binary button
+          _buildButton('DEC'),
+          _buildButton('HEX'),
+          _buildButton('OCT'),
+          _buildButton('BIN'),
         ]),
-
-        // Additional programmer-specific operations
         Row(children: [
           _buildButton('AND'),
           _buildButton('OR'),
           _buildButton('XOR'),
           _buildButton('NOT'),
         ]),
-
         Row(children: [
-          _buildButton('<<'), // Left shift
-          _buildButton('>>'), // Right shift
+          _buildButton('<<'),
+          _buildButton('>>'),
           _buildButton('+'),
           _buildButton('-'),
         ]),
-
         Row(children: [
           _buildButton('*'),
           _buildButton('/'),
@@ -188,6 +161,7 @@ class _CalculatorScreenState extends State<CalculatorScreen>
     );
   }
 
+  // Hiển thị UI máy tính tiền tệ
   Widget _buildCurrencyCalculatorUI() {
     return Column(
       children: [
@@ -242,12 +216,19 @@ class _CalculatorScreenState extends State<CalculatorScreen>
     );
   }
 
+  // Điều hướng giữa các máy tính
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+    Navigator.pop(context); // Đóng drawer sau khi chọn
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Máy tính Flutter')),
       body: SingleChildScrollView(
-        // Sử dụng SingleChildScrollView để cuộn nội dung nếu cần
         child: Column(
           children: [
             Container(
@@ -263,38 +244,51 @@ class _CalculatorScreenState extends State<CalculatorScreen>
                       fontSize: 48, fontWeight: FontWeight.bold)),
             ),
             const Divider(),
-
-
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                  vertical:
-                  8.0), // Điều chỉnh giá trị này để xích thanh trượt lên trên
-              child: TabBar(
-                controller: _tabController,
-                indicatorColor:
-                Colors.transparent,
-                tabs: const [
-                  Tab(text: 'Basic'),
-                  Tab(text: 'Binary'),
-                  Tab(text: 'Currency'), // Thêm tab cho máy tính tiền tệ
-                ],
-              ),
+            if (_selectedIndex == 0)
+              _buildBasicCalculatorUI()
+            else if (_selectedIndex == 1)
+              _buildProgrammerCalculatorUI()
+            else
+              _buildCurrencyCalculatorUI(),
+          ],
+        ),
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            const DrawerHeader(
+              child: Text('Choose type of calculator'),
+              decoration: BoxDecoration(color: Colors.blue),
             ),
-
-
-            SizedBox(
-              height: MediaQuery.of(context).size.height *
-                  0.5, // Điều chỉnh chiều cao nếu cần
-              child: TabBarView(
-                controller: _tabController,
-                children: [
-                  _buildBasicCalculatorUI(),
-                  _buildProgrammerCalculatorUI(),
-                  _buildCurrencyCalculatorUI(), // Gọi giao diện máy tính tiền tệ
-                ],
-              ),
+            ListTile(
+              leading: const Icon(Icons.calculate),
+              title: const Text('Basic calculator'),
+              onTap: () => _onItemTapped(0),
+            ),
+            ListTile(
+              leading: const Icon(Icons.code),
+              title: const Text('Programmer calculator'),
+              onTap: () => _onItemTapped(1),
+            ),
+            ListTile(
+              leading: const Icon(Icons.attach_money),
+              title: const Text('Currency calculator'),
+              onTap: () => _onItemTapped(2),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildButton(String buttonText) {
+    return Expanded(
+      child: Padding(
+        padding: const EdgeInsets.all(4.0),
+        child: ElevatedButton(
+          child: Text(buttonText),
+          onPressed: () => _onButtonPressed(buttonText),
         ),
       ),
     );
