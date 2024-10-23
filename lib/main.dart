@@ -248,8 +248,10 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
               _buildBasicCalculatorUI()
             else if (_selectedIndex == 1)
               _buildProgrammerCalculatorUI()
-            else
-              _buildCurrencyCalculatorUI(),
+            else if (_selectedIndex == 2)
+                _buildCurrencyCalculatorUI()
+              else
+                _buildScientificCalculatorUI(),
           ],
         ),
       ),
@@ -276,9 +278,57 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
               title: const Text('Currency calculator'),
               onTap: () => _onItemTapped(2),
             ),
+            ListTile(
+              title: Text('Scientific Calculator'),
+              leading: const Icon(Icons.science),
+              onTap: () => _onItemTapped(3),
+            )
           ],
         ),
       ),
+    );
+  }
+
+  // Hiển thị UI máy tính khoa học
+  Widget _buildScientificCalculatorUI() {
+    return Column(
+      children: [
+        Row(children: [
+          _buildButton('sin'),
+          _buildButton('cos'),
+          _buildButton('tan'),
+          _buildButton('√'),
+          _buildButton('^'), // Lũy thừa
+        ]),
+        Row(children: [
+          _buildButton('('),
+          _buildButton(')'),
+          _buildButton('7'),
+          _buildButton('8'),
+          _buildButton('9'),
+        ]),
+        Row(children: [
+          _buildButton('4'),
+          _buildButton('5'),
+          _buildButton('6'),
+          _buildButton('/'),
+          _buildButton('C'), // Nút Clear
+        ]),
+        Row(children: [
+          _buildButton('1'),
+          _buildButton('2'),
+          _buildButton('3'),
+          _buildButton('+'),
+          _buildButton('.'),
+        ]),
+        Row(children: [
+          _buildButton('0'),
+          _buildButton('='),
+          _buildButton('π'),
+          _buildButton('x²'),
+          _buildButton('%'),
+        ]),
+      ],
     );
   }
 
