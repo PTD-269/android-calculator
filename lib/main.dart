@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
-import 'calculator_logic.dart';
+import 'dart:math';
 
 void main() {
   runApp(const CalculatorApp());
@@ -30,15 +30,17 @@ class _CalculatorScreenState extends State<CalculatorScreen>
     with SingleTickerProviderStateMixin {
   String _expression = '';
   String _result = '';
-  bool _showMoreButtons = false; // Biến trạng thái cho nút "More"
+  bool _showMoreButtons = false;
+  String _fromCurrency = 'USD';
+  String _toCurrency = 'EUR';
+  double _amount = 0;
 
   late TabController _tabController;
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(
-        length: 3, vsync: this); // Ba tab: Cơ bản, Nhị phân, Tiền tệ
+    _tabController = TabController(length: 3, vsync: this);
   }
 
   void _onButtonPressed(String buttonText) {
@@ -60,17 +62,129 @@ class _CalculatorScreenState extends State<CalculatorScreen>
     Map<String, dynamic> output = json.decode(jsonOutput);
 
     setState(() {
-      if (output['error'] != null) {
-        _result = output['error'];
-      } else {
-        _result = output['result'];
-      }
+      _result = output['error'] ?? output['result'];
     });
+  }
+
+  void _convertCurrency() {
+    double conversionRate = _getConversionRate(_fromCurrency, _toCurrency);
+    setState(() {
+      _result = (_amount * conversionRate).toStringAsFixed(2);
+    });
+  }
+
+  double _getConversionRate(String from, String to) {
+    const rates = {
+      'USD': {'EUR': 0.85, 'JPY': 110.0, 'VND': 23000.0},
+      'EUR': {'USD': 1.18, 'JPY': 130.0, 'VND': 27000.0},
+      'JPY': {'USD': 0.0091, 'EUR': 0.0077, 'VND': 200.0},
+      'VND': {'USD': 0.000043, 'EUR': 0.000037, 'JPY': 0.005},
+    };
+    return rates[from]?[to] ?? 1.0;
+  }
+
+  Widget _buildCurrencyCalculatorUI() {
+    return Column(
+      children: [
+        TextField(
+          decoration: InputDecoration(labelText: 'Nhập số tiền'),
+          keyboardType: TextInputType.number,
+          onChanged: (value) {
+            _amount = double.tryParse(value) ?? 0;
+          },
+        ),
+        _buildCurrencyDropdowns(),
+        ElevatedButton(
+          onPressed: _convertCurrency,
+          child: const Text('Chuyển đổi'),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            'Kết quả: $_result',
+            style: const TextStyle(fontSize: 24),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildCurrencyDropdowns() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        _buildCurrencyDropdown((value) {
+          setState(() {
+            _fromCurrency = value!;
+          });
+        }),
+        const Text('→'),
+        _buildCurrencyDropdown((value) {
+          setState(() {
+            _toCurrency = value!;
+          });
+        }),
+      ],
+    );
+  }
+
+  Widget _buildCurrencyDropdown(ValueChanged<String?> onChanged) {
+    return DropdownButton<String>(
+      value: _fromCurrency,
+      items: <String>['USD', 'EUR', 'JPY', 'VND'].map((String currency) {
+        return DropdownMenuItem<String>(
+          value: currency,
+          child: Text(currency),
+        );
+      }).toList(),
+      onChanged: onChanged,
+    );
+  }
+
+  // Basic Calculator UI
+  Widget _buildBasicCalculatorUI() {
+    return Column(
+      children: [
+        ..._buildCalculatorRows([
+          ['7', '8', '9', '/'],
+          ['4', '5', '6', 'X'],
+          ['1', '2', '3', '-'],
+          ['.', '0', 'C', '+'],
+          ['='],
+        ]),
+        if (_showMoreButtons) _buildMoreButtons(),
+        _buildToggleButton(),
+      ],
+    );
+  }
+
+  // Programmer Calculator UI
+  Widget _buildProgrammerCalculatorUI() {
+    return Column(
+      children: [
+        ..._buildCalculatorRows([
+          ['A', 'B', 'C', 'D'],
+          ['E', 'F', 'C', '='],
+          ['DEC', 'HEX', 'OCT', 'BIN'],
+          ['AND', 'OR', 'XOR', 'NOT'],
+          ['<<', '>>', '+', '-'],
+          ['*', '/'],
+        ]),
+      ],
+    );
+  }
+
+  // Shared methods
+  List<Widget> _buildCalculatorRows(List<List<String>> rows) {
+    return rows.map((row) {
+      return Row(
+        children: row.map((buttonText) => _buildButton(buttonText)).toList(),
+      );
+    }).toList();
   }
 
   Widget _buildButton(String buttonText) {
     return Expanded(
-      flex: 1,
       child: Padding(
         padding: const EdgeInsets.all(4.0),
         child: ElevatedButton(
@@ -81,162 +195,33 @@ class _CalculatorScreenState extends State<CalculatorScreen>
     );
   }
 
-  Widget _buildBasicCalculatorUI() {
+  Widget _buildMoreButtons() {
     return Column(
       children: [
         Row(children: [
-          _buildButton('7'),
-          _buildButton('8'),
-          _buildButton('9'),
-          _buildButton('/')
+          _buildButton('Ans'),
+          _buildButton('π'),
+          _buildButton('x²'),
         ]),
         Row(children: [
-          _buildButton('4'),
-          _buildButton('5'),
-          _buildButton('6'),
-          _buildButton('X')
-        ]),
-        Row(children: [
-          _buildButton('1'),
-          _buildButton('2'),
-          _buildButton('3'),
-          _buildButton('-')
-        ]),
-        Row(children: [
-          _buildButton('.'),
-          _buildButton('0'),
-          _buildButton('C'),
-          _buildButton('+')
-        ]),
-        Row(children: [_buildButton('=')]),
-        if (_showMoreButtons)
-          Column(
-            children: [
-              Row(children: [
-                _buildButton('Ans'),
-                _buildButton('π'),
-                _buildButton('x²')
-              ]),
-              Row(children: [
-                _buildButton('%'),
-                _buildButton('x!'),
-                _buildButton('E')
-              ]),
-            ],
-          ),
-        Row(
-          children: [
-            ElevatedButton(
-              child: Text(_showMoreButtons ? 'Ít hơn' : 'Thêm'),
-              onPressed: () {
-                setState(() {
-                  _showMoreButtons = !_showMoreButtons;
-                });
-              },
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Widget _buildProgrammerCalculatorUI() {
-    return Column(
-      children: [
-        // Row for Hexadecimal input
-        Row(children: [
-          _buildButton('A'),
-          _buildButton('B'),
-          _buildButton('C'),
-          _buildButton('D'),
-        ]),
-        Row(children: [
+          _buildButton('%'),
+          _buildButton('x!'),
           _buildButton('E'),
-          _buildButton('F'),
-          _buildButton('C'), // Clear button
-          _buildButton('='), // Equals button
-        ]),
-
-        // Row for number systems and bitwise operations
-        Row(children: [
-          _buildButton('DEC'), // Decimal button
-          _buildButton('HEX'), // Hexadecimal button
-          _buildButton('OCT'), // Octal button
-          _buildButton('BIN'), // Binary button
-        ]),
-
-        // Additional programmer-specific operations
-        Row(children: [
-          _buildButton('AND'),
-          _buildButton('OR'),
-          _buildButton('XOR'),
-          _buildButton('NOT'),
-        ]),
-
-        Row(children: [
-          _buildButton('<<'), // Left shift
-          _buildButton('>>'), // Right shift
-          _buildButton('+'),
-          _buildButton('-'),
-        ]),
-
-        Row(children: [
-          _buildButton('*'),
-          _buildButton('/'),
         ]),
       ],
     );
   }
 
-  Widget _buildCurrencyCalculatorUI() {
-    return Column(
+  Widget _buildToggleButton() {
+    return Row(
       children: [
-        TextField(
-          decoration: InputDecoration(labelText: 'Nhập số tiền'),
-          keyboardType: TextInputType.number,
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            DropdownButton<String>(
-              value: 'USD',
-              items: <String>['USD', 'EUR', 'JPY', 'VND'].map((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-              onChanged: (String? newValue) {
-                // Xử lý sự kiện chọn đơn vị tiền
-              },
-            ),
-            const Text('→'),
-            DropdownButton<String>(
-              value: 'EUR',
-              items: <String>['USD', 'EUR', 'JPY', 'VND'].map((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-              onChanged: (String? newValue) {
-                // Xử lý sự kiện chọn đơn vị tiền
-              },
-            ),
-          ],
-        ),
         ElevatedButton(
+          child: Text(_showMoreButtons ? 'Ít hơn' : 'Thêm'),
           onPressed: () {
-            // Chuyển đổi tiền tệ (chưa có logic)
+            setState(() {
+              _showMoreButtons = !_showMoreButtons;
+            });
           },
-          child: const Text('Chuyển đổi'),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(
-            'Kết quả: ',
-            style: const TextStyle(fontSize: 24),
-          ),
         ),
       ],
     );
@@ -247,56 +232,152 @@ class _CalculatorScreenState extends State<CalculatorScreen>
     return Scaffold(
       appBar: AppBar(title: const Text('Máy tính Flutter')),
       body: SingleChildScrollView(
-        // Sử dụng SingleChildScrollView để cuộn nội dung nếu cần
         child: Column(
           children: [
-            Container(
-              padding: const EdgeInsets.all(16),
-              alignment: Alignment.centerRight,
-              child: Text(_expression, style: const TextStyle(fontSize: 24)),
-            ),
-            Container(
-              padding: const EdgeInsets.all(16),
-              alignment: Alignment.centerRight,
-              child: Text(_result,
-                  style: const TextStyle(
-                      fontSize: 48, fontWeight: FontWeight.bold)),
-            ),
+            _buildDisplay(),
             const Divider(),
-
-
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                  vertical:
-                  8.0), // Điều chỉnh giá trị này để xích thanh trượt lên trên
-              child: TabBar(
-                controller: _tabController,
-                indicatorColor:
-                Colors.transparent,
-                tabs: const [
-                  Tab(text: 'Basic'),
-                  Tab(text: 'Binary'),
-                  Tab(text: 'Currency'), // Thêm tab cho máy tính tiền tệ
-                ],
-              ),
-            ),
-
-
-            SizedBox(
-              height: MediaQuery.of(context).size.height *
-                  0.5, // Điều chỉnh chiều cao nếu cần
-              child: TabBarView(
-                controller: _tabController,
-                children: [
-                  _buildBasicCalculatorUI(),
-                  _buildProgrammerCalculatorUI(),
-                  _buildCurrencyCalculatorUI(), // Gọi giao diện máy tính tiền tệ
-                ],
-              ),
-            ),
+            _buildTabBar(),
+            _buildTabBarView(),
           ],
         ),
       ),
     );
+  }
+
+  Widget _buildDisplay() {
+    return Column(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(16),
+          alignment: Alignment.centerRight,
+          child: Text(_expression, style: const TextStyle(fontSize: 24)),
+        ),
+        Container(
+          padding: const EdgeInsets.all(16),
+          alignment: Alignment.centerRight,
+          child: Text(
+            _result,
+            style: const TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTabBar() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: TabBar(
+        controller: _tabController,
+        indicatorColor: Colors.transparent,
+        tabs: const [
+          Tab(text: 'Basic'),
+          Tab(text: 'Binary'),
+          Tab(text: 'Currency'),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTabBarView() {
+    return SizedBox(
+      height: MediaQuery.of(context).size.height * 0.5,
+      child: TabBarView(
+        controller: _tabController,
+        children: [
+          _buildBasicCalculatorUI(),
+          _buildProgrammerCalculatorUI(),
+          _buildCurrencyCalculatorUI(),
+        ],
+      ),
+    );
+  }
+}
+
+// Calculator Logic
+class CalculatorLogic {
+  static String processExpression(String jsonInput) {
+    Map<String, dynamic> input = json.decode(jsonInput);
+    String expression = input['expression'];
+
+    try {
+      double result = _evaluate(expression);
+      return json.encode({'result': result.toString(), 'error': null});
+    } catch (e) {
+      return json
+          .encode({'result': null, 'error': 'Error: Invalid expression'});
+    }
+  }
+
+  static double _evaluate(String expression) {
+    expression = expression.replaceAll(' ', '');
+    expression = _handleFactorials(expression);
+
+    List<String> tokens = expression
+        .split(RegExp(r'(\+|\-|\*|\/|\^|%|\!|\&|\||\^|\~|\<\<|\>\>)'));
+    List<String> operators = expression.split(RegExp(r'[0-9\.]+'))
+      ..removeWhere((e) => e.isEmpty);
+
+    for (int i = 0; i < operators.length; i++) {
+      if (operators[i] == '*' ||
+          operators[i] == '/' ||
+          operators[i] == '^' ||
+          operators[i] == '%') {
+        double a = double.parse(tokens[i]);
+        double b = double.parse(tokens[i + 1]);
+        double result;
+
+        switch (operators[i]) {
+          case '*':
+            result = a * b;
+            break;
+          case '/':
+            result = a / b;
+            break;
+          case '^':
+            result = pow(a, b).toDouble();
+            break;
+          case '%':
+            result = a % b;
+            break;
+          default:
+            result = 0;
+        }
+
+        tokens[i] = result.toString();
+        tokens.removeAt(i + 1);
+        operators.removeAt(i);
+        i--;
+      }
+    }
+
+    double result = double.parse(tokens[0]);
+    for (int i = 0; i < operators.length; i++) {
+      double b = double.parse(tokens[i + 1]);
+      if (operators[i] == '+') {
+        result += b;
+      } else if (operators[i] == '-') {
+        result -= b;
+      }
+    }
+
+    return result;
+  }
+
+  static String _handleFactorials(String expression) {
+    final factorialRegex = RegExp(r'(\d+)\!');
+    while (factorialRegex.hasMatch(expression)) {
+      final match = factorialRegex.firstMatch(expression)!;
+      int number = int.parse(match.group(1)!);
+      int factorialResult = _factorial(number);
+      expression =
+          expression.replaceFirst(match.group(0)!, factorialResult.toString());
+    }
+    return expression;
+  }
+
+  static int _factorial(int n) {
+    if (n <= 1) return 1;
+    return n * _factorial(n - 1);
   }
 }
