@@ -337,6 +337,11 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
       child: Padding(
         padding: const EdgeInsets.all(4.0),
         child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.zero, // Giữ góc vuông
+            ),
+          ),
           child: Text(buttonText),
           onPressed: () => _onButtonPressed(buttonText),
         ),
