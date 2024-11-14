@@ -8,185 +8,133 @@ class ProgrammerCalculatorUI extends StatefulWidget {
 }
 
 class _ProgrammerCalculatorUIState extends State<ProgrammerCalculatorUI> {
-  String _input = '';
+  final TextEditingController _inputController = TextEditingController();
   String _result = '';
-  String _base = 'Decimal';
+  String _selectedBase = 'Binary';
+  
+  final List<String> _bases = ['Binary', 'Decimal', 'Hexadecimal', 'Octal'];
 
-  void _appendToInput(String value) {
-    setState(() {
-      _input += value;
-    });
-  }
-
+  // Updates the result display with conversions
   void _calculateResult() {
-    try {
-      String evaluationResult =
-          ProgrammerCalculatorHandler.evaluate(_input, _base);
-      setState(() {
-        _result = evaluationResult;
-        _input = ''; // Clear input after calculation
-      });
-    } catch (e) {
-      setState(() {
-        _result = 'Invalid Input';
-      });
-    }
-  }
-
-  void _clear() {
+    String input = _inputController.text;
     setState(() {
-      _input = '';
-      _result = '';
+      _result = ProgrammerCalculatorHandler.evaluate(input, _selectedBase);
     });
   }
 
-  void _setBase(String base) {
-    setState(() {
-      _base = base;
-      _input = ''; // Clear input when changing base
-      _result = '';
-    });
+  // UI for selecting base type (Binary, Decimal, Hexadecimal, Octal)
+  Widget _buildBaseSelector() {
+    return DropdownButton<String>(
+      value: _selectedBase,
+      onChanged: (String? newValue) {
+        setState(() {
+          _selectedBase = newValue!;
+        });
+      },
+      items: _bases.map<DropdownMenuItem<String>>((String base) {
+        return DropdownMenuItem<String>(
+          value: base,
+          child: Text(base),
+        );
+      }).toList(),
+    );
+  }
+
+  // UI for the input and conversion display
+  Widget _buildInputSection() {
+    return Column(
+      children: [
+        TextField(
+          controller: _inputController,
+          decoration: InputDecoration(
+            labelText: 'Enter Value',
+            border: OutlineInputBorder(),
+          ),
+          keyboardType: TextInputType.number,
+        ),
+        SizedBox(height: 10),
+        ElevatedButton(
+          onPressed: _calculateResult,
+          child: Text('Convert'),
+        ),
+        SizedBox(height: 10),
+        Text(
+          _result,
+          textAlign: TextAlign.center,
+          style: TextStyle(fontSize: 16),
+        ),
+      ],
+    );
+  }
+
+  // Bitwise operations section
+  Widget _buildBitwiseOperations() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            _buildBitwiseButton('AND', () {
+              int result = ProgrammerCalculatorHandler.performBitwiseAnd(5, 3);
+              setState(() {
+                _result = 'AND Result: $result';
+              });
+            }),
+            _buildBitwiseButton('OR', () {
+              int result = ProgrammerCalculatorHandler.performBitwiseOr(5, 3);
+              setState(() {
+                _result = 'OR Result: $result';
+              });
+            }),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            _buildBitwiseButton('XOR', () {
+              int result = ProgrammerCalculatorHandler.performBitwiseXor(5, 3);
+              setState(() {
+                _result = 'XOR Result: $result';
+              });
+            }),
+            _buildBitwiseButton('NOT', () {
+              int result = ProgrammerCalculatorHandler.performBitwiseNot(5);
+              setState(() {
+                _result = 'NOT Result: $result';
+              });
+            }),
+          ],
+        ),
+      ],
+    );
+  }
+
+  // Helper method to create bitwise operation buttons
+  Widget _buildBitwiseButton(String label, VoidCallback onPressed) {
+    return ElevatedButton(
+      onPressed: onPressed,
+      child: Text(label),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          Container(
-            alignment: Alignment.centerRight,
-            child: Text(
-              'Input ($_base): $_input',
-              style: TextStyle(fontSize: 24),
-            ),
-          ),
-          SizedBox(height: 10),
-          Container(
-            alignment: Alignment.centerRight,
-            child: Text(
-              'Result:\n$_result',
-              style: TextStyle(fontSize: 24),
-            ),
-          ),
-          SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    return Scaffold(
+      appBar: AppBar(title: Text('Programmer Calculator')),
+      body: Padding(
+        padding: EdgeInsets.all(16.0),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              ElevatedButton(
-                onPressed: () => _setBase('Binary'),
-                child: Text('Binary'),
-              ),
-              ElevatedButton(
-                onPressed: () => _setBase('Decimal'),
-                child: Text('Decimal'),
-              ),
-              ElevatedButton(
-                onPressed: () => _setBase('Hexadecimal'),
-                child: Text('Hexadecimal'),
-              ),
-              ElevatedButton(
-                onPressed: () => _setBase('Octal'),
-                child: Text('Octal'),
-              ),
+              _buildBaseSelector(),
+              SizedBox(height: 20),
+              _buildInputSection(),
+              SizedBox(height: 20),
+              _buildBitwiseOperations(),
             ],
           ),
-          SizedBox(height: 20),
-          Expanded(
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    _buildButton('7'),
-                    _buildButton('8'),
-                    _buildButton('9'),
-                    _buildButton('AND'),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    _buildButton('4'),
-                    _buildButton('5'),
-                    _buildButton('6'),
-                    _buildButton('OR'),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    _buildButton('1'),
-                    _buildButton('2'),
-                    _buildButton('3'),
-                    _buildButton('XOR'),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    _buildButton('0'),
-                    _buildButton('C'),
-                    _buildButton('='),
-                    _buildButton('NOT'),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildButton(String value) {
-    return Container(
-      margin: EdgeInsets.all(4.0),
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.teal,
-          padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.0),
-          ),
-          fixedSize: Size(70, 70), // Fixed size for buttons
-        ),
-        onPressed: () {
-          if (value == '=') {
-            _calculateResult();
-          } else if (value == 'C') {
-            _clear();
-          } else if (value == 'AND' || value == 'OR' || value == 'XOR') {
-            // Handle bitwise operations
-            int a = int.parse(_input);
-            int b = int.parse(_input); // For simplicity, using the same input
-            int result;
-            if (value == 'AND') {
-              result = ProgrammerCalculatorHandler.performBitwiseAnd(a, b);
-            } else if (value == 'OR') {
-              result = ProgrammerCalculatorHandler.performBitwiseOr(a, b);
-            } else {
-              result = ProgrammerCalculatorHandler.performBitwiseXor(a, b);
-            }
-            setState(() {
-              _result = 'Result: $result';
-              _input = ''; // Clear input after calculation
-            });
-          } else if (value == 'NOT') {
-            int a = int.parse(_input);
-            int result = ProgrammerCalculatorHandler.performBitwiseNot(a);
-            setState(() {
-              _result = 'Result: $result';
-              _input = ''; // Clear input after calculation
-            });
-          } else {
-            _appendToInput(value);
-          }
-        },
-        child: Text(
-          value,
-          style: TextStyle(fontSize: 24, color: Colors.white),
         ),
       ),
     );
