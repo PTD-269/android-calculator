@@ -1,4 +1,3 @@
-// ProgrammerCalculatorUI.dart
 import 'package:flutter/material.dart';
 import 'ProgrammerCalculatorHandler.dart';
 
@@ -11,7 +10,8 @@ class _ProgrammerCalculatorUIState extends State<ProgrammerCalculatorUI> {
   final TextEditingController _inputController = TextEditingController();
   String _result = '';
   String _selectedBase = 'Binary';
-  
+  bool _showBitwiseOptions = false;
+
   final List<String> _bases = ['Binary', 'Decimal', 'Hexadecimal', 'Octal'];
 
   // Updates the result display with conversions
@@ -67,46 +67,83 @@ class _ProgrammerCalculatorUIState extends State<ProgrammerCalculatorUI> {
     );
   }
 
+  // Number buttons section (0-9)
+  Widget _buildNumberButtons() {
+    return Column(
+      children: [
+        for (var row in [
+          [1, 2, 3],
+          [4, 5, 6],
+          [7, 8, 9],
+          [0]
+        ])
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: row
+                .map(
+                  (number) => SizedBox(
+                    width: 70, // Set the width to match Basic UI buttons
+                    height: 70, // Set the height to match Basic UI buttons
+                    child: ElevatedButton(
+                      onPressed: () {
+                        _inputController.text += number.toString();
+                      },
+                      child: Text(
+                        number.toString(),
+                        style: TextStyle(fontSize: 24),
+                      ),
+                    ),
+                  ),
+                )
+                .toList(),
+          ),
+      ],
+    );
+  }
+
   // Bitwise operations section
   Widget _buildBitwiseOperations() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            _buildBitwiseButton('AND', () {
-              int result = ProgrammerCalculatorHandler.performBitwiseAnd(5, 3);
-              setState(() {
-                _result = 'AND Result: $result';
-              });
-            }),
-            _buildBitwiseButton('OR', () {
-              int result = ProgrammerCalculatorHandler.performBitwiseOr(5, 3);
-              setState(() {
-                _result = 'OR Result: $result';
-              });
-            }),
-          ],
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            _buildBitwiseButton('XOR', () {
-              int result = ProgrammerCalculatorHandler.performBitwiseXor(5, 3);
-              setState(() {
-                _result = 'XOR Result: $result';
-              });
-            }),
-            _buildBitwiseButton('NOT', () {
-              int result = ProgrammerCalculatorHandler.performBitwiseNot(5);
-              setState(() {
-                _result = 'NOT Result: $result';
-              });
-            }),
-          ],
-        ),
-      ],
+    return Visibility(
+      visible: _showBitwiseOptions,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              _buildBitwiseButton('AND', () {
+                int result = ProgrammerCalculatorHandler.performBitwiseAnd(5, 3);
+                setState(() {
+                  _result = 'AND Result: $result';
+                });
+              }),
+              _buildBitwiseButton('OR', () {
+                int result = ProgrammerCalculatorHandler.performBitwiseOr(5, 3);
+                setState(() {
+                  _result = 'OR Result: $result';
+                });
+              }),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              _buildBitwiseButton('XOR', () {
+                int result = ProgrammerCalculatorHandler.performBitwiseXor(5, 3);
+                setState(() {
+                  _result = 'XOR Result: $result';
+                });
+              }),
+              _buildBitwiseButton('NOT', () {
+                int result = ProgrammerCalculatorHandler.performBitwiseNot(5);
+                setState(() {
+                  _result = 'NOT Result: $result';
+                });
+              }),
+            ],
+          ),
+        ],
+      ),
     );
   }
 
@@ -115,6 +152,18 @@ class _ProgrammerCalculatorUIState extends State<ProgrammerCalculatorUI> {
     return ElevatedButton(
       onPressed: onPressed,
       child: Text(label),
+    );
+  }
+
+  // Toggle for "More" section
+  Widget _buildMoreButton() {
+    return ElevatedButton(
+      onPressed: () {
+        setState(() {
+          _showBitwiseOptions = !_showBitwiseOptions;
+        });
+      },
+      child: Text(_showBitwiseOptions ? 'Hide Options' : 'More'),
     );
   }
 
@@ -132,6 +181,10 @@ class _ProgrammerCalculatorUIState extends State<ProgrammerCalculatorUI> {
               SizedBox(height: 20),
               _buildInputSection(),
               SizedBox(height: 20),
+              _buildNumberButtons(),
+              SizedBox(height: 20),
+              _buildMoreButton(),
+              SizedBox(height: 10),
               _buildBitwiseOperations(),
             ],
           ),

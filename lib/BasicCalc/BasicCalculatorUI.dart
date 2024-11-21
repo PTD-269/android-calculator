@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'BasicCalculatorHandler.dart';
 
 class BasicCalculatorUI extends StatefulWidget {
   @override
@@ -9,6 +8,7 @@ class BasicCalculatorUI extends StatefulWidget {
 class _BasicCalculatorUIState extends State<BasicCalculatorUI> {
   String _expression = '';
   String _result = '';
+  bool _showTrigButtons = false; // Trạng thái hiển thị các nút con
 
   void _appendToExpression(String value) {
     setState(() {
@@ -17,10 +17,9 @@ class _BasicCalculatorUIState extends State<BasicCalculatorUI> {
   }
 
   void _calculateResult() {
-    double result = BasicCalculatorHandler.evaluate(_expression);
     setState(() {
-      _result = result.toString();
-      _expression = ''; // Clear expression after calculation
+      _result = _expression; // Giả lập kết quả (tùy chỉnh logic tính toán tại đây)
+      _expression = '';
     });
   }
 
@@ -39,31 +38,36 @@ class _BasicCalculatorUIState extends State<BasicCalculatorUI> {
           title: Text('Basic Calculator'),
           backgroundColor: Colors.teal,
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Container(
-                alignment: Alignment.centerRight,
-                padding: EdgeInsets.all(16),
-                child: Text(
-                  _expression,
-                  style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
-                ),
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Container(
+              alignment: Alignment.centerRight,
+              padding: EdgeInsets.all(16),
+              child: Text(
+                _expression,
+                style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
               ),
-              Container(
-                alignment: Alignment.centerRight,
-                padding: EdgeInsets.all(16),
-                child: Text(
-                  _result,
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.grey[700]),
-                ),
+            ),
+            Container(
+              alignment: Alignment.centerRight,
+              padding: EdgeInsets.all(16),
+              child: Text(
+                _result,
+                style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey[700]),
               ),
-              const Divider(),
-              _buildCalculatorButtons(),
-            ],
-          ),
+            ),
+            const Divider(),
+            Stack(
+              children: [
+                _buildCalculatorButtons(),
+                if (_showTrigButtons) _buildTrigButtonsOverlay(), // Nút con xuất hiện phía trên
+              ],
+            ),
+          ],
         ),
       ),
     );
@@ -75,7 +79,7 @@ class _BasicCalculatorUIState extends State<BasicCalculatorUI> {
         _buildButtonRow(['7', '8', '9', '/']),
         _buildButtonRow(['4', '5', '6', '*']),
         _buildButtonRow(['1', '2', '3', '-']),
-        _buildButtonRow(['C', '0', '=', '+']),
+        _buildButtonRow(['More', '0', '=', '+']),
       ],
     );
   }
@@ -89,11 +93,11 @@ class _BasicCalculatorUIState extends State<BasicCalculatorUI> {
   Widget _buildButton(String value) {
     return Expanded(
       child: Padding(
-        padding: const EdgeInsets.all(4.0),  // Reduced padding for compactness
+        padding: const EdgeInsets.all(4.0),
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.teal,
-            padding: EdgeInsets.symmetric(vertical: 16.0),  // Compact padding
+            padding: EdgeInsets.symmetric(vertical: 16.0),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(4.0),
             ),
@@ -103,15 +107,55 @@ class _BasicCalculatorUIState extends State<BasicCalculatorUI> {
               _calculateResult();
             } else if (value == 'C') {
               _clear();
+            } else if (value == 'More') {
+              setState(() {
+                _showTrigButtons = !_showTrigButtons; // Bật/tắt hiển thị nút con
+              });
             } else {
               _appendToExpression(value);
             }
           },
           child: Text(
             value,
-            style: TextStyle(fontSize: 20, color: Colors.white),  // Adjusted font size for compactness
+            style: TextStyle(fontSize: 20, color: Colors.white),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildTrigButtonsOverlay() {
+    return Positioned(
+      bottom: 120, // Điều chỉnh vị trí để hiển thị ngay trên nút More
+      left: 0,
+      right: 0,
+      child: Row(
+        children: ['sin', 'cos', 'tan'].map((value) {
+          return Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(4.0),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.orange,
+                  padding: EdgeInsets.symmetric(vertical: 16.0),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(4.0),
+                  ),
+                ),
+                onPressed: () {
+                  _appendToExpression(value);
+                  setState(() {
+                    _showTrigButtons = false; // Tắt nút con khi đã chọn
+                  });
+                },
+                child: Text(
+                  value,
+                  style: TextStyle(fontSize: 20, color: Colors.white),
+                ),
+              ),
+            ),
+          );
+        }).toList(),
       ),
     );
   }
