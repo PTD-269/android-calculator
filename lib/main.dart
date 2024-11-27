@@ -1,4 +1,3 @@
-// main.dart
 import 'package:flutter/material.dart';
 import 'BasicCalc/BasicCalculatorUI.dart';
 import 'ProgrammerCalc/ProgrammerCalculatorUI.dart';
@@ -14,26 +13,79 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Calculator App',
       theme: ThemeData(primarySwatch: Colors.teal),
-      home: DefaultTabController(
-        length: 3, // Updated to 3 for the new tab
-        child: Scaffold(
-          appBar: AppBar(
-            title: Text('Calculator App'),
-            bottom: TabBar(
-              tabs: [
-                Tab(text: 'Basic Calculator'),
-                Tab(text: 'Programmer Calculator'),
-                Tab(text: 'Currency Calculator'),
-              ],
+      home: MyHomePage(),
+    );
+  }
+}
+
+class MyHomePage extends StatefulWidget {
+  @override
+  _MyHomePageState createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  // Keep track of the selected index for the calculator
+  int _selectedIndex = 0;
+
+  // List of calculator screens
+  final List<Widget> _screens = [
+    BasicCalculatorUI(),
+    ProgrammerCalculatorUI(),
+    CurrencyCalculatorUI(),
+  ];
+
+  // Function to change the selected index
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Calculator App'),
+      ),
+      body: _screens[_selectedIndex], // Display the selected screen
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.teal,
+              ),
+              child: Text(
+                'Select Calculator',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                ),
+              ),
             ),
-          ),
-          body: TabBarView(
-            children: [
-              BasicCalculatorUI(),
-              ProgrammerCalculatorUI(),
-              CurrencyCalculatorUI(), // New currency calculator UI
-            ],
-          ),
+            ListTile(
+              title: Text('Basic Calculator'),
+              onTap: () {
+                _onItemTapped(0);
+                Navigator.pop(context); // Close the drawer
+              },
+            ),
+            ListTile(
+              title: Text('Programmer Calculator'),
+              onTap: () {
+                _onItemTapped(1);
+                Navigator.pop(context); // Close the drawer
+              },
+            ),
+            ListTile(
+              title: Text('Currency Calculator'),
+              onTap: () {
+                _onItemTapped(2);
+                Navigator.pop(context); // Close the drawer
+              },
+            ),
+          ],
         ),
       ),
     );
