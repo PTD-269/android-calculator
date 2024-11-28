@@ -66,6 +66,7 @@ class _ProgrammerCalculatorUIState extends State<ProgrammerCalculatorUI> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
+          // Phần input và kết quả
           Container(
             alignment: Alignment.centerRight,
             child: Text(
@@ -82,21 +83,26 @@ class _ProgrammerCalculatorUIState extends State<ProgrammerCalculatorUI> {
             ),
           ),
           SizedBox(height: 20),
+          
+          // Thay đổi phần nút Binary, Decimal, Hexadecimal, Octal
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisAlignment: MainAxisAlignment.start, // Đặt các nút sang trái
             children: [
               ElevatedButton(
                 onPressed: () => _setBase('Binary'),
                 child: Text('Binary'),
               ),
+              SizedBox(width: 10),
               ElevatedButton(
                 onPressed: () => _setBase('Decimal'),
                 child: Text('Decimal'),
               ),
+              SizedBox(width: 10),
               ElevatedButton(
                 onPressed: () => _setBase('Hexadecimal'),
                 child: Text('Hexadecimal'),
               ),
+              SizedBox(width: 10),
               ElevatedButton(
                 onPressed: () => _setBase('Octal'),
                 child: Text('Octal'),
@@ -104,7 +110,8 @@ class _ProgrammerCalculatorUIState extends State<ProgrammerCalculatorUI> {
             ],
           ),
           SizedBox(height: 20),
-          // Thay thế phần bàn phím với CalculatorKeyboard
+
+          // Phần bàn phím với CalculatorKeyboard
           Expanded(
             child: CalculatorKeyboard(onButtonPressed: _onButtonPressed),
           ),
