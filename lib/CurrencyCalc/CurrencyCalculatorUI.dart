@@ -1,4 +1,3 @@
-// CurrencyCalculatorUI.dart
 import 'package:flutter/material.dart';
 import 'CurrencyCalculatorHandler.dart';
 
@@ -68,43 +67,103 @@ class _CurrencyCalculatorUIState extends State<CurrencyCalculatorUI> {
             ),
             SizedBox(height: 20),
             // Dropdown cho đồng tiền xuất phát
-            DropdownButton<String>(
-              value: _fromCurrency,
-              onChanged: (String? newValue) {
-                setState(() {
-                  _fromCurrency = newValue!;
-                  _fromCurrencyColor = Colors.black; // Đổi màu chữ thành đen khi chọn
-                });
-              },
-              items: CurrencyCalculatorHandler.getAvailableCurrencies()
-                  .map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
+            GestureDetector(
+              onTap: () async {
+                // Giới hạn hiệu ứng "mờ" khi dropdown được mở
+                FocusScope.of(context).requestFocus(FocusNode());
+                final selectedCurrency = await showDialog<String>(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return SimpleDialog(
+                      title: Text("Select Currency"),
+                      children: CurrencyCalculatorHandler.getAvailableCurrencies()
+                          .map<Widget>((String value) {
+                        return SimpleDialogOption(
+                          onPressed: () {
+                            Navigator.pop(context, value);
+                          },
+                          child: Text(value),
+                        );
+                      }).toList(),
+                    );
+                  },
                 );
-              }).toList(),
-              dropdownColor: Colors.blueAccent, // Màu nền xanh cho dropdown
-              style: TextStyle(color: _fromCurrencyColor), // Màu chữ thay đổi
+                if (selectedCurrency != null) {
+                  setState(() {
+                    _fromCurrency = selectedCurrency;
+                    _fromCurrencyColor = Colors.black; // Đổi màu chữ thành đen khi chọn
+                  });
+                }
+              },
+              child: Container(
+                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.blueAccent),
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                child: Row(
+                  children: [
+                    Text(
+                      _fromCurrency,
+                      style: TextStyle(color: _fromCurrencyColor, fontSize: 18),
+                    ),
+                    Icon(
+                      Icons.arrow_drop_down,
+                      color: _fromCurrencyColor,
+                    ),
+                  ],
+                ),
+              ),
             ),
             SizedBox(height: 20),
             // Dropdown cho đồng tiền đích
-            DropdownButton<String>(
-              value: _toCurrency,
-              onChanged: (String? newValue) {
-                setState(() {
-                  _toCurrency = newValue!;
-                  _toCurrencyColor = Colors.black; // Đổi màu chữ thành đen khi chọn
-                });
-              },
-              items: CurrencyCalculatorHandler.getAvailableCurrencies()
-                  .map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
+            GestureDetector(
+              onTap: () async {
+                // Giới hạn hiệu ứng "mờ" khi dropdown được mở
+                FocusScope.of(context).requestFocus(FocusNode());
+                final selectedCurrency = await showDialog<String>(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return SimpleDialog(
+                      title: Text("Select Currency"),
+                      children: CurrencyCalculatorHandler.getAvailableCurrencies()
+                          .map<Widget>((String value) {
+                        return SimpleDialogOption(
+                          onPressed: () {
+                            Navigator.pop(context, value);
+                          },
+                          child: Text(value),
+                        );
+                      }).toList(),
+                    );
+                  },
                 );
-              }).toList(),
-              dropdownColor: Colors.blueAccent, // Màu nền xanh cho dropdown
-              style: TextStyle(color: _toCurrencyColor), // Màu chữ thay đổi
+                if (selectedCurrency != null) {
+                  setState(() {
+                    _toCurrency = selectedCurrency;
+                    _toCurrencyColor = Colors.black; // Đổi màu chữ thành đen khi chọn
+                  });
+                }
+              },
+              child: Container(
+                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.blueAccent),
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                child: Row(
+                  children: [
+                    Text(
+                      _toCurrency,
+                      style: TextStyle(color: _toCurrencyColor, fontSize: 18),
+                    ),
+                    Icon(
+                      Icons.arrow_drop_down,
+                      color: _toCurrencyColor,
+                    ),
+                  ],
+                ),
+              ),
             ),
             SizedBox(height: 20),
             // Nút chuyển đổi
