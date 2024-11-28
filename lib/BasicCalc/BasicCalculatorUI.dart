@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../widgets/CalculatorKeyboard.dart'; 
 import '../BasicCalc/BasicCalculatorHandler.dart';
+
 class BasicCalculatorUI extends StatefulWidget {
   @override
   _BasicCalculatorUIState createState() => _BasicCalculatorUIState();
@@ -29,6 +30,51 @@ class _BasicCalculatorUIState extends State<BasicCalculatorUI> {
       _expression = '';
       _result = '';
     });
+  }
+
+  void _openMoreFunctions() {
+    // Hiển thị BottomSheet khi người dùng nhấn vào nút "More"
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                title: Text("Square Root (√)", style: TextStyle(fontSize: 18)),
+                onTap: () {
+                  _appendToExpression('√');
+                  Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                title: Text("Logarithm (log)", style: TextStyle(fontSize: 18)),
+                onTap: () {
+                  _appendToExpression('log');
+                  Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                title: Text("Sin", style: TextStyle(fontSize: 18)),
+                onTap: () {
+                  _appendToExpression('sin');
+                  Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                title: Text("Cos", style: TextStyle(fontSize: 18)),
+                onTap: () {
+                  _appendToExpression('cos');
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -66,6 +112,8 @@ class _BasicCalculatorUIState extends State<BasicCalculatorUI> {
                     _calculateResult();
                   } else if (value == 'C') {
                     _clear();
+                  } else if (value == 'More') {
+                    _openMoreFunctions();  // Khi nhấn More, mở BottomSheet
                   } else {
                     _appendToExpression(value);
                   }
@@ -78,4 +126,3 @@ class _BasicCalculatorUIState extends State<BasicCalculatorUI> {
     );
   }
 }
-//demo 1

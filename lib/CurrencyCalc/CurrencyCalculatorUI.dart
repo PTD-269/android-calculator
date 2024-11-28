@@ -170,7 +170,7 @@ class _CurrencyCalculatorUIState extends State<CurrencyCalculatorUI> {
             ElevatedButton(
               onPressed: _convertCurrency,
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blueAccent, // blue button
+                backgroundColor: Colors.blueAccent, // Màu nút xanh dương
                 padding: EdgeInsets.symmetric(vertical: 15, horizontal: 25),
               ),
               child: Text(
@@ -179,7 +179,7 @@ class _CurrencyCalculatorUIState extends State<CurrencyCalculatorUI> {
               ),
             ),
             SizedBox(height: 20),
-            // result
+            // 
             Text(
               _result,
               style: TextStyle(fontSize: 24, color: Colors.blueAccent),
