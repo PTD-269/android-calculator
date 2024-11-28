@@ -24,7 +24,7 @@ class _ProgrammerCalculatorUIState extends State<ProgrammerCalculatorUI> {
           ProgrammerCalculatorHandler.evaluate(_input, _base);
       setState(() {
         _result = evaluationResult;
-        _input = ''; // Clear input after calculation
+        _input = ''; 
       });
     } catch (e) {
       setState(() {
@@ -43,12 +43,12 @@ class _ProgrammerCalculatorUIState extends State<ProgrammerCalculatorUI> {
   void _setBase(String base) {
     setState(() {
       _base = base;
-      _input = ''; // Clear input when changing base
+      _input = ''; //
       _result = '';
     });
   }
 
-  // Hàm xử lý khi nhấn nút từ CalculatorKeyboard
+  // 
   void _onButtonPressed(String value) {
     if (value == '=') {
       _calculateResult();
@@ -66,7 +66,7 @@ class _ProgrammerCalculatorUIState extends State<ProgrammerCalculatorUI> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          // Phần input và kết quả
+          
           Container(
             alignment: Alignment.centerRight,
             child: Text(
@@ -84,7 +84,7 @@ class _ProgrammerCalculatorUIState extends State<ProgrammerCalculatorUI> {
           ),
           SizedBox(height: 20),
           
-          // Thay đổi phần nút Binary, Decimal, Hexadecimal, Octal
+          // Binary, Decimal, Hexadecimal, Octal
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly, // Evenly spaced buttons
             children: [
@@ -105,10 +105,10 @@ class _ProgrammerCalculatorUIState extends State<ProgrammerCalculatorUI> {
               ElevatedButton(
                 onPressed: () => _setBase('Decimal'),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green, // Green color
+                  backgroundColor: Colors.green, 
                   padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8), // Rounded corners
+                    borderRadius: BorderRadius.circular(8), 
                   ),
                 ),
                 child: Text(
@@ -119,10 +119,10 @@ class _ProgrammerCalculatorUIState extends State<ProgrammerCalculatorUI> {
               ElevatedButton(
                 onPressed: () => _setBase('Hexadecimal'),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green, // Green color
+                  backgroundColor: Colors.green, 
                   padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8), // Rounded corners
+                    borderRadius: BorderRadius.circular(8), 
                   ),
                 ),
                 child: Text(
@@ -133,10 +133,10 @@ class _ProgrammerCalculatorUIState extends State<ProgrammerCalculatorUI> {
               ElevatedButton(
                 onPressed: () => _setBase('Octal'),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green, // Green color
+                  backgroundColor: Colors.green, 
                   padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8), // Rounded corners
+                    borderRadius: BorderRadius.circular(8), 
                   ),
                 ),
                 child: Text(
