@@ -1,6 +1,6 @@
-// ProgrammerCalculatorUI.dart
 import 'package:flutter/material.dart';
 import 'ProgrammerCalculatorHandler.dart';
+import '../Widgets/CalculatorKeyboard.dart'; 
 
 class ProgrammerCalculatorUI extends StatefulWidget {
   @override
@@ -48,6 +48,17 @@ class _ProgrammerCalculatorUIState extends State<ProgrammerCalculatorUI> {
     });
   }
 
+  // Hàm xử lý khi nhấn nút từ CalculatorKeyboard
+  void _onButtonPressed(String value) {
+    if (value == '=') {
+      _calculateResult();
+    } else if (value == 'C') {
+      _clear();
+    } else {
+      _appendToInput(value);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -93,101 +104,11 @@ class _ProgrammerCalculatorUIState extends State<ProgrammerCalculatorUI> {
             ],
           ),
           SizedBox(height: 20),
+          // Thay thế phần bàn phím với CalculatorKeyboard
           Expanded(
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    _buildButton('7'),
-                    _buildButton('8'),
-                    _buildButton('9'),
-                    _buildButton('AND'),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    _buildButton('4'),
-                    _buildButton('5'),
-                    _buildButton('6'),
-                    _buildButton('OR'),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    _buildButton('1'),
-                    _buildButton('2'),
-                    _buildButton('3'),
-                    _buildButton('XOR'),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    _buildButton('0'),
-                    _buildButton('C'),
-                    _buildButton('='),
-                    _buildButton('NOT'),
-                  ],
-                ),
-              ],
-            ),
+            child: CalculatorKeyboard(onButtonPressed: _onButtonPressed),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildButton(String value) {
-    return Container(
-      margin: EdgeInsets.all(4.0),
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.teal,
-          padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.0),
-          ),
-          fixedSize: Size(70, 70), // Fixed size for buttons
-        ),
-        onPressed: () {
-          if (value == '=') {
-            _calculateResult();
-          } else if (value == 'C') {
-            _clear();
-          } else if (value == 'AND' || value == 'OR' || value == 'XOR') {
-            // Handle bitwise operations
-            int a = int.parse(_input);
-            int b = int.parse(_input); // For simplicity, using the same input
-            int result;
-            if (value == 'AND') {
-              result = ProgrammerCalculatorHandler.performBitwiseAnd(a, b);
-            } else if (value == 'OR') {
-              result = ProgrammerCalculatorHandler.performBitwiseOr(a, b);
-            } else {
-              result = ProgrammerCalculatorHandler.performBitwiseXor(a, b);
-            }
-            setState(() {
-              _result = 'Result: $result';
-              _input = ''; // Clear input after calculation
-            });
-          } else if (value == 'NOT') {
-            int a = int.parse(_input);
-            int result = ProgrammerCalculatorHandler.performBitwiseNot(a);
-            setState(() {
-              _result = 'Result: $result';
-              _input = ''; // Clear input after calculation
-            });
-          } else {
-            _appendToInput(value);
-          }
-        },
-        child: Text(
-          value,
-          style: TextStyle(fontSize: 24, color: Colors.white),
-        ),
       ),
     );
   }
