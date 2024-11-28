@@ -51,16 +51,16 @@ class _CurrencyCalculatorUIState extends State<CurrencyCalculatorUI> {
               controller: _amountController,
               decoration: InputDecoration(
                 labelText: 'Amount',
-                labelStyle: TextStyle(color: Colors.blueAccent), // Màu label xanh dương
+                labelStyle: TextStyle(color: Colors.blueAccent), 
                 enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.blueAccent), // Viền xanh dương
+                  borderSide: BorderSide(color: Colors.blueAccent), 
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: Colors.blueAccent), // Viền khi focus xanh dương
                 ),
               ),
-              keyboardType: TextInputType.number, // Hiển thị bàn phím số
-              textInputAction: TextInputAction.done, // Khi nhấn "Done"
+              keyboardType: TextInputType.number, 
+              textInputAction: TextInputAction.done, 
               onSubmitted: (value) {
                 _convertCurrency(); // Khi nhấn Enter, thực hiện chuyển đổi
               },
@@ -69,7 +69,7 @@ class _CurrencyCalculatorUIState extends State<CurrencyCalculatorUI> {
             // Dropdown cho đồng tiền xuất phát
             GestureDetector(
               onTap: () async {
-                // Giới hạn hiệu ứng "mờ" khi dropdown được mở
+                // Giới hạn hiệu ứng mờ 
                 FocusScope.of(context).requestFocus(FocusNode());
                 final selectedCurrency = await showDialog<String>(
                   context: context,
@@ -91,7 +91,7 @@ class _CurrencyCalculatorUIState extends State<CurrencyCalculatorUI> {
                 if (selectedCurrency != null) {
                   setState(() {
                     _fromCurrency = selectedCurrency;
-                    _fromCurrencyColor = Colors.black; // Đổi màu chữ thành đen khi chọn
+                    _fromCurrencyColor = Colors.black; 
                   });
                 }
               },
@@ -116,10 +116,10 @@ class _CurrencyCalculatorUIState extends State<CurrencyCalculatorUI> {
               ),
             ),
             SizedBox(height: 20),
-            // Dropdown cho đồng tiền đích
+            // Dropdown for second input field
             GestureDetector(
               onTap: () async {
-                // Giới hạn hiệu ứng "mờ" khi dropdown được mở
+                // unlimited focusScope
                 FocusScope.of(context).requestFocus(FocusNode());
                 final selectedCurrency = await showDialog<String>(
                   context: context,
@@ -141,7 +141,7 @@ class _CurrencyCalculatorUIState extends State<CurrencyCalculatorUI> {
                 if (selectedCurrency != null) {
                   setState(() {
                     _toCurrency = selectedCurrency;
-                    _toCurrencyColor = Colors.black; // Đổi màu chữ thành đen khi chọn
+                    _toCurrencyColor = Colors.black; 
                   });
                 }
               },
@@ -170,7 +170,7 @@ class _CurrencyCalculatorUIState extends State<CurrencyCalculatorUI> {
             ElevatedButton(
               onPressed: _convertCurrency,
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blueAccent, // Màu nút xanh dương
+                backgroundColor: Colors.blueAccent, // blue button
                 padding: EdgeInsets.symmetric(vertical: 15, horizontal: 25),
               ),
               child: Text(
@@ -179,7 +179,7 @@ class _CurrencyCalculatorUIState extends State<CurrencyCalculatorUI> {
               ),
             ),
             SizedBox(height: 20),
-            // Kết quả hiển thị
+            // result
             Text(
               _result,
               style: TextStyle(fontSize: 24, color: Colors.blueAccent),

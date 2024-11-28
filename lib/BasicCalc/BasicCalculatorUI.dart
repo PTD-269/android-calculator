@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import '../widgets/CalculatorKeyboard.dart'; // Import from the widgets folder
-import '../BasicCalc/BasicCalculatorHandler.dart'; // Import from the logic folder
-
+import '../widgets/CalculatorKeyboard.dart'; 
+import '../BasicCalc/BasicCalculatorHandler.dart';
 class BasicCalculatorUI extends StatefulWidget {
   @override
   _BasicCalculatorUIState createState() => _BasicCalculatorUIState();
@@ -21,7 +20,7 @@ class _BasicCalculatorUIState extends State<BasicCalculatorUI> {
     double result = BasicCalculatorHandler.evaluate(_expression);
     setState(() {
       _result = result.toString();
-      _expression = ''; // Clear expression after calculation
+      _expression = ''; 
     });
   }
 
