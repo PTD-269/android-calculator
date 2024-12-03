@@ -4,6 +4,14 @@ class ProgrammerCalculatorHandler {
     return int.parse(binary, radix: 2);
   }
 
+  static int hexadecimalToDecimal(String hex) {
+    return int.parse(hex, radix: 16);
+  }
+
+  static int octalToDecimal(String octal) {
+    return int.parse(octal, radix: 8);
+  }
+
   static String decimalToBinary(int decimal) {
     return decimal.toRadixString(2);
   }
@@ -34,11 +42,27 @@ class ProgrammerCalculatorHandler {
 
   static String evaluate(String input, String base) {
     int decimalValue;
-    if (base == 'Binary') {
-      decimalValue = binaryToDecimal(input);
-    } else {
-      decimalValue = int.parse(input);
+
+    try {
+      switch (base) {
+        case 'Binary':
+          decimalValue = binaryToDecimal(input);
+          break;
+        case 'Hexadecimal':
+          decimalValue = hexadecimalToDecimal(input);
+          break;
+        case 'Octal':
+          decimalValue = octalToDecimal(input);
+          break;
+        case 'Decimal':
+        default:
+          decimalValue = int.parse(input);
+          break;
+      }
+    } catch (e) {
+      throw FormatException("Invalid Input");
     }
+
     return 'Decimal: $decimalValue\n'
         'Binary: ${decimalToBinary(decimalValue)}\n'
         'Hexadecimal: ${decimalToHexadecimal(decimalValue)}\n'
