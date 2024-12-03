@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class CalculatorKeyboard extends StatelessWidget {
   final Function(String) onButtonPressed;
 
-  // Constructor to receive the callback function
+  
   CalculatorKeyboard({Key? key, required this.onButtonPressed})
       : super(key: key);
 
@@ -53,7 +53,7 @@ class CalculatorKeyboard extends StatelessWidget {
 
     //size of buttons
     double buttonWidth = (screenWidth - 40) / 4; 
-    double buttonHeight = buttonWidth * 0.75; // Tăng tỷ lệ chiều cao của nút (tuỳ chỉnh)
+    double buttonHeight = buttonWidth * 0.75; // (can adjust here)
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Expanded (
