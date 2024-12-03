@@ -3,9 +3,7 @@ import 'package:flutter/material.dart';
 class CalculatorKeyboard extends StatelessWidget {
   final Function(String) onButtonPressed;
 
-  
-  CalculatorKeyboard({Key? key, required this.onButtonPressed})
-      : super(key: key);
+  CalculatorKeyboard({Key? key, required this.onButtonPressed}) : super(key: key);
 
   final List<String> buttons = [
     "More",
@@ -29,63 +27,118 @@ class CalculatorKeyboard extends StatelessWidget {
     "=",
   ];
 
+  // Danh sách các nút trong PopupMenuButton
+  final List<String> moreOptions = [
+    "Option 1", "Option 2", "Option 3", "Option 4", "Option 5"
+  ];
+
   Color getButtonColor(String button) {
-   // map with same key as color 
     final Map<String, Color> buttonColors = {
       "More": Colors.white38,
-      "C": Colors.white70,
-      "=": Colors.green,
+      "C": Colors.orange,
+      "=": Colors.orange,
       "/": Colors.orange,
       "x": Colors.orange,
       "-": Colors.orange,
       "+": Colors.orange,
+      "%": Colors.orange
     };
 
-    
     return buttonColors[button] ?? Colors.blue;
   }
 
   @override
   Widget build(BuildContext context) {
-    // size of screen
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
-    //size of buttons
-    double buttonWidth = (screenWidth - 40) / 4; 
-    double buttonHeight = buttonWidth * 0.75; // (can adjust here)
+    double buttonWidth = (screenWidth - 40) / 4;
+    double buttonHeight = buttonWidth * 0.75;
+
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: Expanded (
-        child: GridView.builder(
-          // physics: const NeverScrollableScrollPhysics(),
-          itemCount: buttons.length,
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 4,
-            childAspectRatio: buttonWidth / buttonHeight,
-            crossAxisSpacing: 8,
-            mainAxisSpacing: 8,
-          ),
-          itemBuilder: (context, index) {
-            String button = buttons[index];
-            Color buttonColor = getButtonColor(button);
-        
-            return ElevatedButton(
-              onPressed: () => onButtonPressed(button),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: buttonColor,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
+      child: GridView.builder(
+        itemCount: buttons.length,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 4,
+          childAspectRatio: buttonWidth / buttonHeight,
+          crossAxisSpacing: 8,
+          mainAxisSpacing: 8,
+        ),
+        itemBuilder: (context, index) {
+          String button = buttons[index];
+          Color buttonColor = getButtonColor(button);
+
+          // Nếu là nút "More", sử dụng PopupMenuButton
+          if (button == "More") {
+            return PopupMenuButton<String>(
+              onSelected: (value) {
+                // Khi chọn một option trong menu, gọi hàm onButtonPressed
+                onButtonPressed(value);
+              },
+              itemBuilder: (BuildContext context) {
+                return moreOptions.map((String option) {
+                  return PopupMenuItem<String>(
+                    value: option,
+                    child: Container(
+                      width: 150,
+                      padding: EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: Colors.blueAccent, // Chỉnh màu nền
+                        borderRadius: BorderRadius.circular(8),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black26,
+                            blurRadius: 5,
+                            offset: Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: Text(
+                        option,
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  );
+                }).toList();
+              },
+              child: ElevatedButton(
+                onPressed: null, // Không cần xử lý khi bấm, PopupMenuButton sẽ tự động hiển thị
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: buttonColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  padding: EdgeInsets.symmetric(vertical: buttonWidth * 0.2),
                 ),
-                padding: EdgeInsets.symmetric(vertical: buttonWidth * 0.2),
-              ),
-              child: Text(
-                button,
-                style: TextStyle(fontSize: 24, color: Colors.white),
+                child: Text(
+                  button,
+                  style: TextStyle(fontSize: 24, color: Colors.white),
+                ),
               ),
             );
-          },
-        ),
+          }
+
+          // Các nút khác
+          return ElevatedButton(
+            onPressed: () => onButtonPressed(button),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: buttonColor,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+              padding: EdgeInsets.symmetric(vertical: buttonWidth * 0.2),
+            ),
+            child: Text(
+              button,
+              style: TextStyle(fontSize: 24, color: Colors.white),
+            ),
+          );
+        },
       ),
     );
   }
