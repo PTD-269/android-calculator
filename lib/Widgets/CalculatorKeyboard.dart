@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'MoreOptionsMenu.dart';
 
 class CalculatorKeyboard extends StatelessWidget {
   final Function(String) onButtonPressed;
 
-  CalculatorKeyboard({Key? key, required this.onButtonPressed}) : super(key: key);
+  CalculatorKeyboard({Key? key, required this.onButtonPressed})
+      : super(key: key);
 
   final List<String> buttons = [
     "More",
@@ -27,10 +29,10 @@ class CalculatorKeyboard extends StatelessWidget {
     "=",
   ];
 
-  // Danh sách các nút trong PopupMenuButton
-  final List<String> moreOptions = [
-    "Option 1", "Option 2", "Option 3", "Option 4", "Option 5"
-  ];
+  // // Danh sách các nút trong PopupMenuButton
+  // final List<String> moreOptions = [
+  //   "Option 1", "Option 2", "Option 3", "Option 4", "Option 5"
+  // ];
 
   Color getButtonColor(String button) {
     final Map<String, Color> buttonColors = {
@@ -69,65 +71,21 @@ class CalculatorKeyboard extends StatelessWidget {
           String button = buttons[index];
           Color buttonColor = getButtonColor(button);
 
-          // Nếu là nút "More", sử dụng PopupMenuButton
+          //more using PopupMenuButton
           if (button == "More") {
-            return PopupMenuButton<String>(
-              onSelected: (value) {
+            return MoreOptionsMenu(
+              onOptionSelected: (value) {
                 // Khi chọn một option trong menu, gọi hàm onButtonPressed
                 onButtonPressed(value);
               },
-              itemBuilder: (BuildContext context) {
-                return moreOptions.map((String option) {
-                  return PopupMenuItem<String>(
-                    value: option,
-                    child: Container(
-                      width: 150,
-                      padding: EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: Colors.blueAccent, // Chỉnh màu nền
-                        borderRadius: BorderRadius.circular(8),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black26,
-                            blurRadius: 5,
-                            offset: Offset(0, 2),
-                          ),
-                        ],
-                      ),
-                      child: Text(
-                        option,
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  );
-                }).toList();
-              },
-              child: ElevatedButton(
-                onPressed: null, // Không cần xử lý khi bấm, PopupMenuButton sẽ tự động hiển thị
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: buttonColor,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  padding: EdgeInsets.symmetric(vertical: buttonWidth * 0.2),
-                ),
-                child: Text(
-                  button,
-                  style: TextStyle(fontSize: 24, color: Colors.white),
-                ),
-              ),
             );
           }
 
-          // Các nút khác
+          //style another button
           return ElevatedButton(
             onPressed: () => onButtonPressed(button),
             style: ElevatedButton.styleFrom(
-              backgroundColor: buttonColor,
+              backgroundColor: buttonColor, // variable contains the color
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
               ),
