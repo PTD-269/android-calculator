@@ -68,11 +68,11 @@ class CalculatorKeyboard extends StatelessWidget {
           String button = buttons[index];
           Color buttonColor = getButtonColor(button);
 
-          //more using PopupMenuButton
+          //using PopupMenuButton
           if (button == "More") {
             return MoreOptionsMenu(
               onOptionSelected: (value) {
-                // Khi chọn một option trong menu, gọi hàm onButtonPressed
+                // when choose, call onOptionSelected
                 onButtonPressed(value);
               },
             );
@@ -82,7 +82,7 @@ class CalculatorKeyboard extends StatelessWidget {
           return ElevatedButton(
             onPressed: () => onButtonPressed(button),
             style: ElevatedButton.styleFrom(
-              backgroundColor: buttonColor, // variable contains the color
+              backgroundColor: buttonColor, 
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
               ),

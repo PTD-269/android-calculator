@@ -63,20 +63,20 @@ class _ProgrammerCalculatorUIState extends State<ProgrammerCalculatorUI> {
     }
   }
 
-  // Widget tái sử dụng cho các nút chế độ
+ // widget to make buttons 
   Widget _buildBaseButton(String label, String base) {
     return ElevatedButton(
       onPressed: () => _setBase(base),
       style: ElevatedButton.styleFrom(
         backgroundColor: _base == base ? Colors.green.shade700 : Colors.green, 
-        padding: EdgeInsets.symmetric(vertical: 8, horizontal: 10), // Kích thước nút nhỏ
+        padding: EdgeInsets.symmetric(vertical: 8, horizontal: 10), 
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
         ),
       ),
       child: Text(
         label,
-        style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white), // Cỡ chữ nhỏ
+        style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white), 
       ),
     );
   }
@@ -86,14 +86,14 @@ class _ProgrammerCalculatorUIState extends State<ProgrammerCalculatorUI> {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.start, // Đảm bảo các phần không bị giãn ra quá nhiều
-        crossAxisAlignment: CrossAxisAlignment.start, // Căn chỉnh theo chiều ngang trái
+        mainAxisAlignment: MainAxisAlignment.start, 
+        crossAxisAlignment: CrossAxisAlignment.start, 
         children: [
-          // Phần Input và Result (hiển thị song song)
+          // display one one
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // Cột chứa các nút chế độ
+              // mode
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -106,7 +106,7 @@ class _ProgrammerCalculatorUIState extends State<ProgrammerCalculatorUI> {
                   _buildBaseButton('Octal', 'Octal'),
                 ],
               ),
-              // Cột chứa phần Input và Result
+              // input and result
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
@@ -125,7 +125,7 @@ class _ProgrammerCalculatorUIState extends State<ProgrammerCalculatorUI> {
           ),
           SizedBox(height: 20),
 
-          // Phần Calculator Keyboard (phần này chiếm không gian còn lại)
+          //Change mode keyboard here!!
           Expanded(
             child: ProgrammerKeyboard(onButtonPressed: _onButtonPressed),
           ),

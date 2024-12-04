@@ -43,19 +43,19 @@ class ProgrammerKeyboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
-    double buttonWidth = (screenWidth - 40) / 5 * scale;  // Điều chỉnh theo scale
-    double buttonHeight = buttonWidth * 0.75;  // Giữ tỷ lệ
+    double buttonWidth = (screenWidth - 40) / 5 * scale;  
+    double buttonHeight = buttonWidth * 0.75;
 
-    double fontSize = 16 * scale;  // Điều chỉnh font size
-    double buttonPadding = buttonWidth * 0.2 * scale; // Điều chỉnh padding
+    double fontSize = 16 * scale;  
+    double buttonPadding = buttonWidth * 0.2 * scale; 
 
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: SingleChildScrollView(  // Thêm SingleChildScrollView để bàn phím có thể cuộn
-        child: Column(  // Sử dụng Column để bọc các GridView
+      child: SingleChildScrollView(  
+        child: Column(  
           children: [
             GridView.builder(
-              shrinkWrap: true,  // Cho phép GridView chiếm không gian nhỏ nhất cần thiết
+              shrinkWrap: true, 
               // physics: NeverScrollableScrollPhysics(),  // Tắt cuộn của GridView
               itemCount: buttons.length,
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -75,11 +75,11 @@ class ProgrammerKeyboard extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    padding: EdgeInsets.symmetric(vertical: buttonPadding),  // Dùng padding tính từ scale
+                    padding: EdgeInsets.symmetric(vertical: buttonPadding),  
                   ),
                   child: Text(
                     button,
-                    style: TextStyle(fontSize: fontSize, color: Colors.white),  // Dùng fontSize tính từ scale
+                    style: TextStyle(fontSize: fontSize, color: Colors.white),  
                   ),
                 );
               },
