@@ -17,11 +17,14 @@ class _ProgrammerCalculatorUIState extends State<ProgrammerCalculatorUI> {
   void _appendToInput(String value) {
     setState(() {
       if (value == 'Clear') {
-        _input = '';
+        _clear();
       } else if (value == 'DEL') {
         if (_input.isNotEmpty) {
           _input = _input.substring(0, _input.length - 1);
         }
+      } else if (value == "C") {
+        _input += value;
+
       } else {
         _input += value;
       }
@@ -74,8 +77,6 @@ class _ProgrammerCalculatorUIState extends State<ProgrammerCalculatorUI> {
   void _onButtonPressed(String value) {
     if (value == '=') {
       _calculateResult();
-    } else if (value == 'C') {
-      _clear();
     } else {
       _appendToInput(value);
     }

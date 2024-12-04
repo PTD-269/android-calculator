@@ -20,13 +20,13 @@ class ProgrammerKeyboard extends StatelessWidget {
 
   Color getButtonColor(String button) {
     final Map<String, Color> buttonColors = {
-      "A": Colors.blueAccent,
-      "B": Colors.blueAccent,
-      "C": Colors.blueAccent,
-      "D": Colors.blueAccent,
-      "E": Colors.blueAccent,
+      "A": Colors.blueGrey,
+      "B": Colors.blueGrey,
+      "C": Colors.blueGrey,
+      "D": Colors.blueGrey,
+      "E": Colors.blueGrey,
       "CE": Colors.orange,
-      "=": Colors.blue,
+      "=": Colors.redAccent,
       "/": Colors.orange,
       "x": Colors.orange,
       "-": Colors.orange,
@@ -35,6 +35,8 @@ class ProgrammerKeyboard extends StatelessWidget {
       "<<": Colors.grey,
       ">>": Colors.grey,
       "+/-": Colors.grey,
+      "DEL":Colors.orangeAccent,
+      "Clear":Colors.redAccent
     };
 
     return buttonColors[button] ?? Colors.blueAccent;
