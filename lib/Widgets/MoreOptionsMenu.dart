@@ -5,7 +5,7 @@ class MoreOptionsMenu extends StatelessWidget {
   MoreOptionsMenu({required this.onOptionSelected});
 
   final List<String> moreOptions = [
-    "Nhân", "Lê", "Thành", "Option 4", "Option 5"
+    "Sin","Cos","Tan","Cosin"
   ]; 
 
   @override

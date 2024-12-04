@@ -13,7 +13,7 @@ class BasicCalculatorHandler {
   }
 
   static List<String> _splitTokens(String expression) {
-    return expression.split(RegExp(r'(\+|\-|\*|\/)'));
+    return expression.split(RegExp(r'(\+|\-|\x|\/)'));
   }
 
   static List<String> _extractOperators(String expression) {

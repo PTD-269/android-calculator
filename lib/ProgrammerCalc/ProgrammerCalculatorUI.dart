@@ -5,47 +5,43 @@ import "../Widgets/ProgrammerKeyboard.dart";
 
 class ProgrammerCalculatorUI extends StatefulWidget {
   @override
-  _ProgrammerCalculatorUIState createState() =>
-      _ProgrammerCalculatorUIState();
+  _ProgrammerCalculatorUIState createState() => _ProgrammerCalculatorUIState();
 }
 
 class _ProgrammerCalculatorUIState extends State<ProgrammerCalculatorUI> {
-  String _input = '';  // Biểu thức người dùng nhập vào
+  String _input = ''; // Biểu thức người dùng nhập vào
   String _result = ''; // Kết quả sau khi tính toán
-  String _base = 'decimal';  // Hệ cơ sở hiện tại (binary, octal, decimal, hexadecimal)
+  String _base =
+      'decimal'; // Hệ cơ sở hiện tại (binary, octal, decimal, hexadecimal)
 
-  
- void _appendToInput(String value) {
-  setState(() {
-    if (value == 'Clear') {
-      _input = '';
-    } else if (value == 'DEL') {
-     
-      if (_input.isNotEmpty) {
-        _input = _input.substring(0, _input.length - 1);
+  void _appendToInput(String value) {
+    setState(() {
+      if (value == 'Clear') {
+        _input = '';
+      } else if (value == 'DEL') {
+        if (_input.isNotEmpty) {
+          _input = _input.substring(0, _input.length - 1);
+        }
+      } else {
+        _input += value;
       }
-    } else {
-      
-      _input += value;
-    }
-  });
-}
-
+    });
+  }
 
   // Tính toán kết quả
   void _calculateResult() {
     try {
-      
-      var results = ProgrammerCalculatorHandler.evaluateExpression(_input, _base);
+      var results =
+          ProgrammerCalculatorHandler.evaluateExpression(_input, _base);
 
       setState(() {
         if (results == null) {
           _result = 'Invalid Expression';
         } else {
           _result = 'Binary: ${results['binary']}\n' +
-                    'Octal: ${results['octal']}\n' +
-                    'Decimal: ${results['decimal']}\n' +
-                    'Hexadecimal: ${results['hexadecimal']}';
+              'Octal: ${results['octal']}\n' +
+              'Decimal: ${results['decimal']}\n' +
+              'Hexadecimal: ${results['hexadecimal']}';
         }
 
         _input = '';
@@ -65,7 +61,7 @@ class _ProgrammerCalculatorUIState extends State<ProgrammerCalculatorUI> {
     });
   }
 
-  // 
+  //
   void _setBase(String base) {
     setState(() {
       _base = base;
@@ -74,7 +70,7 @@ class _ProgrammerCalculatorUIState extends State<ProgrammerCalculatorUI> {
     });
   }
 
-  // 
+  //
   void _onButtonPressed(String value) {
     if (value == '=') {
       _calculateResult();
@@ -85,20 +81,20 @@ class _ProgrammerCalculatorUIState extends State<ProgrammerCalculatorUI> {
     }
   }
 
-  
   Widget _buildBaseButton(String label, String base) {
     return ElevatedButton(
       onPressed: () => _setBase(base),
       style: ElevatedButton.styleFrom(
-        backgroundColor: _base == base ? Colors.green.shade700 : Colors.green, 
-        padding: EdgeInsets.symmetric(vertical: 8, horizontal: 10), 
+        backgroundColor: _base == base ? Colors.green.shade700 : Colors.green,
+        padding: EdgeInsets.symmetric(vertical: 8, horizontal: 10),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
         ),
       ),
       child: Text(
         label,
-        style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white), 
+        style: TextStyle(
+            fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white),
       ),
     );
   }
@@ -108,8 +104,8 @@ class _ProgrammerCalculatorUIState extends State<ProgrammerCalculatorUI> {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.start, 
-        crossAxisAlignment: CrossAxisAlignment.start, 
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Các nút chọn hệ cơ sở
           Row(
@@ -147,7 +143,6 @@ class _ProgrammerCalculatorUIState extends State<ProgrammerCalculatorUI> {
           ),
           SizedBox(height: 20),
 
-        
           Expanded(
             child: ProgrammerKeyboard(onButtonPressed: _onButtonPressed),
           ),
