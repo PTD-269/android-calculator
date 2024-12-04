@@ -23,10 +23,10 @@ class BasicCalculatorHandler {
   static List<String> _performMultiplicationAndDivision(
       List<String> tokens, List<String> operators) {
     for (int i = 0; i < operators.length; i++) {
-      if (operators[i] == '*' || operators[i] == '/') {
+      if (operators[i] == 'x' || operators[i] == '/') {
         double a = double.parse(tokens[i]);
         double b = double.parse(tokens[i + 1]);
-        double result = operators[i] == '*' ? a * b : a / b;
+        double result = operators[i] == 'x' ? a * b : a / b;
         tokens[i] = result.toString();
         tokens.removeAt(i + 1);
         operators.removeAt(i);

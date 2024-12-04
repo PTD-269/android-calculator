@@ -49,50 +49,6 @@ class _BasicCalculatorUIState extends State<BasicCalculatorUI> {
       },
     );
   }
-  // void _openMoreFunctions() {
-  //   // Hiển thị BottomSheet khi người dùng nhấn vào nút "More"
-  //   showModalBottomSheet(
-  //     context: context,
-  //     builder: (context) {
-  //       return Padding(
-  //         padding: const EdgeInsets.all(16.0),
-  //         child: Column(
-  //           mainAxisSize: MainAxisSize.min,
-  //           children: [
-  //             ListTile(
-  //               title: Text("Square Root (√)", style: TextStyle(fontSize: 18)),
-  //               onTap: () {
-  //                 _appendToExpression('√');
-  //                 Navigator.pop(context);
-  //               },
-  //             ),
-  //             ListTile(
-  //               title: Text("Logarithm (log)", style: TextStyle(fontSize: 18)),
-  //               onTap: () {
-  //                 _appendToExpression('log');
-  //                 Navigator.pop(context);
-  //               },
-  //             ),
-  //             ListTile(
-  //               title: Text("Sin", style: TextStyle(fontSize: 18)),
-  //               onTap: () {
-  //                 _appendToExpression('sin');
-  //                 Navigator.pop(context);
-  //               },
-  //             ),
-  //             ListTile(
-  //               title: Text("Cos", style: TextStyle(fontSize: 18)),
-  //               onTap: () {
-  //                 _appendToExpression('cos');
-  //                 Navigator.pop(context);
-  //               },
-  //             ),
-  //           ],
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
 
   @override
   Widget build(BuildContext context) {

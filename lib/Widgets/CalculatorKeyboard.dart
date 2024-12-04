@@ -29,10 +29,7 @@ class CalculatorKeyboard extends StatelessWidget {
     "=",
   ];
 
-  // // Danh sách các nút trong PopupMenuButton
-  // final List<String> moreOptions = [
-  //   "Option 1", "Option 2", "Option 3", "Option 4", "Option 5"
-  // ];
+
 
   Color getButtonColor(String button) {
     final Map<String, Color> buttonColors = {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'ProgrammerCalculatorHandler.dart';
-import '../Widgets/CalculatorKeyboard.dart'; 
+import '../Widgets/CalculatorKeyboard.dart';
+import "../Widgets/ProgrammerKeyboard.dart";
 
 class ProgrammerCalculatorUI extends StatefulWidget {
   @override
@@ -24,11 +25,11 @@ class _ProgrammerCalculatorUIState extends State<ProgrammerCalculatorUI> {
           ProgrammerCalculatorHandler.evaluate(_input, _base);
       setState(() {
         _result = evaluationResult;
-        _input = ''; 
+        _input = '';
       });
     } catch (e) {
       setState(() {
-        _result = 'Invalid Input';
+        _result = 'Invalid Input: ${e.toString()}';
       });
     }
   }
@@ -43,12 +44,11 @@ class _ProgrammerCalculatorUIState extends State<ProgrammerCalculatorUI> {
   void _setBase(String base) {
     setState(() {
       _base = base;
-      _input = ''; //
+      _input = '';
       _result = '';
     });
   }
 
-  // 
   void _onButtonPressed(String value) {
     if (value == '=') {
       _calculateResult();
@@ -59,98 +59,71 @@ class _ProgrammerCalculatorUIState extends State<ProgrammerCalculatorUI> {
     }
   }
 
+  // Widget tái sử dụng cho các nút chế độ
+  Widget _buildBaseButton(String label, String base) {
+    return ElevatedButton(
+      onPressed: () => _setBase(base),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: _base == base ? Colors.green.shade700 : Colors.green, 
+        padding: EdgeInsets.symmetric(vertical: 8, horizontal: 10), // Kích thước nút nhỏ
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+      ),
+      child: Text(
+        label,
+        style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white), // Cỡ chữ nhỏ
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.start, // Đảm bảo các phần không bị giãn ra quá nhiều
+        crossAxisAlignment: CrossAxisAlignment.start, // Căn chỉnh theo chiều ngang trái
         children: [
-          
-          Container(
-            alignment: Alignment.centerRight,
-            child: Text(
-              'Input ($_base): $_input',
-              style: TextStyle(fontSize: 24),
-            ),
-          ),
-          SizedBox(height: 10),
-          Container(
-            alignment: Alignment.centerRight,
-            child: Text(
-              'Result:\n$_result',
-              style: TextStyle(fontSize: 24),
-            ),
-          ),
-          SizedBox(height: 20),
-          
-          // Binary, Decimal, Hexadecimal, Octal
+          // Phần Input và Result (hiển thị song song)
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly, // Evenly spaced buttons
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              ElevatedButton(
-                onPressed: () => _setBase('Binary'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green, // Green color
-                  padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8), // Rounded corners
-                  ),
-                ),
-                child: Text(
-                  'Binary',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
-                ),
+              // Cột chứa các nút chế độ
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildBaseButton('Binary', 'Binary'),
+                  SizedBox(height: 10),
+                  _buildBaseButton('Decimal', 'Decimal'),
+                  SizedBox(height: 10),
+                  _buildBaseButton('Hexadecimal', 'Hexadecimal'),
+                  SizedBox(height: 10),
+                  _buildBaseButton('Octal', 'Octal'),
+                ],
               ),
-              ElevatedButton(
-                onPressed: () => _setBase('Decimal'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green, 
-                  padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8), 
+              // Cột chứa phần Input và Result
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    'Input ($_base): $_input',
+                    style: TextStyle(fontSize: 24),
                   ),
-                ),
-                child: Text(
-                  'Decimal',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
-                ),
-              ),
-              ElevatedButton(
-                onPressed: () => _setBase('Hexadecimal'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green, 
-                  padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8), 
+                  SizedBox(height: 10),
+                  Text(
+                    'Result:\n$_result',
+                    style: TextStyle(fontSize: 24),
                   ),
-                ),
-                child: Text(
-                  'Hexadecimal',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
-                ),
-              ),
-              ElevatedButton(
-                onPressed: () => _setBase('Octal'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green, 
-                  padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8), 
-                  ),
-                ),
-                child: Text(
-                  'Octal',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
-                ),
+                ],
               ),
             ],
           ),
           SizedBox(height: 20),
 
-          // Phần bàn phím với CalculatorKeyboard
+          // Phần Calculator Keyboard (phần này chiếm không gian còn lại)
           Expanded(
-            child: CalculatorKeyboard(onButtonPressed: _onButtonPressed),
+            child: ProgrammerKeyboard(onButtonPressed: _onButtonPressed),
           ),
         ],
       ),
