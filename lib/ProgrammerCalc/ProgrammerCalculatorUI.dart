@@ -5,29 +5,40 @@ import "../Widgets/ProgrammerKeyboard.dart";
 
 class ProgrammerCalculatorUI extends StatefulWidget {
   @override
-  _ProgrammerCalculatorUIState createState() => _ProgrammerCalculatorUIState();
+  _ProgrammerCalculatorUIState createState() =>
+      _ProgrammerCalculatorUIState();
 }
 
 class _ProgrammerCalculatorUIState extends State<ProgrammerCalculatorUI> {
-  String _input = '';
-  String _result = '';
-  String _base = 'Decimal';
+  String _input = '';  // Biểu thức người dùng nhập vào
+  String _result = ''; // Kết quả sau khi tính toán
+  String _base = 'decimal';  // Hệ cơ sở hiện tại (binary, octal, decimal, hexadecimal)
 
+  // Thêm ký tự vào biểu thức
   void _appendToInput(String value) {
     setState(() {
       _input += value;
     });
   }
 
+  // Tính toán kết quả
   void _calculateResult() {
     try {
-      String evaluationResult =
-          ProgrammerCalculatorHandler.evaluate(_input, _base);
+      // Tính toán với handler và trả về kết quả trong tất cả các hệ cơ sở
+      var results = ProgrammerCalculatorHandler.evaluateExpression(_input, _base);
+
       setState(() {
-        _result = evaluationResult;
+        if (results == null) {
+          _result = 'Invalid Expression';
+        } else {
+          _result = 'Binary: ${results['binary']}\n' +
+                    'Octal: ${results['octal']}\n' +
+                    'Decimal: ${results['decimal']}\n' +
+                    'Hexadecimal: ${results['hexadecimal']}';
+        }
 
+        // Sau khi tính toán, reset input
         _input = '';
-
       });
     } catch (e) {
       setState(() {
@@ -36,6 +47,7 @@ class _ProgrammerCalculatorUIState extends State<ProgrammerCalculatorUI> {
     }
   }
 
+  // Xóa input và kết quả
   void _clear() {
     setState(() {
       _input = '';
@@ -43,16 +55,16 @@ class _ProgrammerCalculatorUIState extends State<ProgrammerCalculatorUI> {
     });
   }
 
+  // Đặt lại hệ cơ sở tính toán
   void _setBase(String base) {
     setState(() {
       _base = base;
-
       _input = '';
-
       _result = '';
     });
   }
 
+  // Xử lý khi người dùng bấm một phím
   void _onButtonPressed(String value) {
     if (value == '=') {
       _calculateResult();
@@ -63,7 +75,7 @@ class _ProgrammerCalculatorUIState extends State<ProgrammerCalculatorUI> {
     }
   }
 
- // widget to make buttons 
+  // Widget để xây dựng các nút chọn hệ cơ sở
   Widget _buildBaseButton(String label, String base) {
     return ElevatedButton(
       onPressed: () => _setBase(base),
@@ -89,24 +101,24 @@ class _ProgrammerCalculatorUIState extends State<ProgrammerCalculatorUI> {
         mainAxisAlignment: MainAxisAlignment.start, 
         crossAxisAlignment: CrossAxisAlignment.start, 
         children: [
-          // display one one
+          // Các nút chọn hệ cơ sở
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // mode
+              // Các nút hệ cơ sở
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildBaseButton('Binary', 'Binary'),
+                  _buildBaseButton('Binary', 'binary'),
                   SizedBox(height: 10),
-                  _buildBaseButton('Decimal', 'Decimal'),
+                  _buildBaseButton('Decimal', 'decimal'),
                   SizedBox(height: 10),
-                  _buildBaseButton('Hexadecimal', 'Hexadecimal'),
+                  _buildBaseButton('Hexadecimal', 'hexadecimal'),
                   SizedBox(height: 10),
-                  _buildBaseButton('Octal', 'Octal'),
+                  _buildBaseButton('Octal', 'octal'),
                 ],
               ),
-              // input and result
+              // Hiển thị input và kết quả
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
@@ -125,7 +137,7 @@ class _ProgrammerCalculatorUIState extends State<ProgrammerCalculatorUI> {
           ),
           SizedBox(height: 20),
 
-          //Change mode keyboard here!!
+          // Bàn phím tính toán (ProgrammerKeyboard)
           Expanded(
             child: ProgrammerKeyboard(onButtonPressed: _onButtonPressed),
           ),
