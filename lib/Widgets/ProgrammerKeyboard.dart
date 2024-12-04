@@ -12,10 +12,10 @@ class ProgrammerKeyboard extends StatelessWidget {
   final List<String> buttons = [
     "A", "B", "C", "D", "E", "F", // Các ký tự Hexadecimal
     "7", "8", "9", "/",
-    "4", "5", "6", 
+    "4", "5", "6", "DEL",
     "1", "2", "3", "-",
     "0", ".", "+", "=",
-    "CE", "x", "÷"
+    "Clear", "x", "÷"
   ];
 
   Color getButtonColor(String button) {

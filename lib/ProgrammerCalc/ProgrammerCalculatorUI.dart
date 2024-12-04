@@ -14,17 +14,28 @@ class _ProgrammerCalculatorUIState extends State<ProgrammerCalculatorUI> {
   String _result = ''; // Kết quả sau khi tính toán
   String _base = 'decimal';  // Hệ cơ sở hiện tại (binary, octal, decimal, hexadecimal)
 
-  // Thêm ký tự vào biểu thức
-  void _appendToInput(String value) {
-    setState(() {
+  
+ void _appendToInput(String value) {
+  setState(() {
+    if (value == 'Clear') {
+      _input = '';
+    } else if (value == 'DEL') {
+     
+      if (_input.isNotEmpty) {
+        _input = _input.substring(0, _input.length - 1);
+      }
+    } else {
+      
       _input += value;
-    });
-  }
+    }
+  });
+}
+
 
   // Tính toán kết quả
   void _calculateResult() {
     try {
-      // Tính toán với handler và trả về kết quả trong tất cả các hệ cơ sở
+      
       var results = ProgrammerCalculatorHandler.evaluateExpression(_input, _base);
 
       setState(() {
@@ -37,7 +48,6 @@ class _ProgrammerCalculatorUIState extends State<ProgrammerCalculatorUI> {
                     'Hexadecimal: ${results['hexadecimal']}';
         }
 
-        // Sau khi tính toán, reset input
         _input = '';
       });
     } catch (e) {
@@ -55,7 +65,7 @@ class _ProgrammerCalculatorUIState extends State<ProgrammerCalculatorUI> {
     });
   }
 
-  // Đặt lại hệ cơ sở tính toán
+  // 
   void _setBase(String base) {
     setState(() {
       _base = base;
@@ -64,7 +74,7 @@ class _ProgrammerCalculatorUIState extends State<ProgrammerCalculatorUI> {
     });
   }
 
-  // Xử lý khi người dùng bấm một phím
+  // 
   void _onButtonPressed(String value) {
     if (value == '=') {
       _calculateResult();
@@ -75,7 +85,7 @@ class _ProgrammerCalculatorUIState extends State<ProgrammerCalculatorUI> {
     }
   }
 
-  // Widget để xây dựng các nút chọn hệ cơ sở
+  
   Widget _buildBaseButton(String label, String base) {
     return ElevatedButton(
       onPressed: () => _setBase(base),
@@ -137,7 +147,7 @@ class _ProgrammerCalculatorUIState extends State<ProgrammerCalculatorUI> {
           ),
           SizedBox(height: 20),
 
-          // Bàn phím tính toán (ProgrammerKeyboard)
+        
           Expanded(
             child: ProgrammerKeyboard(onButtonPressed: _onButtonPressed),
           ),
