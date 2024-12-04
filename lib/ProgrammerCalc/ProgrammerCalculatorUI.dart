@@ -25,7 +25,9 @@ class _ProgrammerCalculatorUIState extends State<ProgrammerCalculatorUI> {
           ProgrammerCalculatorHandler.evaluate(_input, _base);
       setState(() {
         _result = evaluationResult;
+
         _input = '';
+
       });
     } catch (e) {
       setState(() {
@@ -44,7 +46,9 @@ class _ProgrammerCalculatorUIState extends State<ProgrammerCalculatorUI> {
   void _setBase(String base) {
     setState(() {
       _base = base;
+
       _input = '';
+
       _result = '';
     });
   }
