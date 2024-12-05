@@ -118,11 +118,12 @@ class _ProgrammerCalculatorUIState extends State<ProgrammerCalculatorUI> {
                 children: [
                   _buildBaseButton('Binary', 'binary'),
                   SizedBox(height: 10),
+                  _buildBaseButton('Octal', 'octal'),
+                  
+                  SizedBox(height: 10),
                   _buildBaseButton('Decimal', 'decimal'),
                   SizedBox(height: 10),
                   _buildBaseButton('Hexadecimal', 'hexadecimal'),
-                  SizedBox(height: 10),
-                  _buildBaseButton('Octal', 'octal'),
                 ],
               ),
               // Hiển thị input và kết quả

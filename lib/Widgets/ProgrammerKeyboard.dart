@@ -9,14 +9,41 @@ class ProgrammerKeyboard extends StatelessWidget {
     this.scale = 1, // Mặc định là kích thước gốc
   });
 
-  final List<String> buttons = [
-    "A", "B", "C", "D", "E", "F", // Các ký tự Hexadecimal
-    "7", "8", "9", "/",
-    "4", "5", "6", "DEL",
-    "1", "2", "3", "-",
-    "0", ".", "+", "=",
-    "Clear", "x", "÷"
-  ];
+  final List<String> buttons =  [
+    "A","^", "|", "~", "&",
+    "B", "+" ,"-","*", "/",
+    "C","7", "8", "9"," ", 
+    "D", "4" ,"5","6", " ",
+    "E", "1", "2", "3", "Clear",
+    "F"," .", "0", "=" ,"DEL"
+  ];       
+    
+
+
+
+
+// 2
+
+// [
+//     "A", "7", "8", "9","Clear",
+//     "B", "4" ,"5","6", "DEL",
+//     "C", "1", "2", "3", "-",
+//     "D",".", "0","+","=",
+//     "E","^", "|", "~", "&",
+//     "F"," ", " ", " "
+//   ];       
+
+  //   [
+  //   "A", "7", "8", "9","Clear",
+  //   "B", "4" ,"5","6", "DEL",
+  //   "C", "1", "2", "3", "-",
+  //   "D",".", "0","+","=",
+  //   "E","^", "|", "~", "&",
+  //   "F","(", ")", " "
+  // ];       
+
+
+
 
   Color getButtonColor(String button) {
     final Map<String, Color> buttonColors = {
@@ -25,18 +52,23 @@ class ProgrammerKeyboard extends StatelessWidget {
       "C": Colors.blueGrey,
       "D": Colors.blueGrey,
       "E": Colors.blueGrey,
+      "F":Colors.blueGrey,
       "CE": Colors.orange,
       "=": Colors.redAccent,
       "/": Colors.orange,
-      "x": Colors.orange,
+      "*": Colors.orange,
       "-": Colors.orange,
       "+": Colors.orange,
       "%": Colors.orange,
       "<<": Colors.grey,
       ">>": Colors.grey,
       "+/-": Colors.grey,
-      "DEL":Colors.orangeAccent,
-      "Clear":Colors.redAccent
+      "DEL":Colors.redAccent,
+      "Clear":Colors.redAccent,
+      "~":Colors.orangeAccent,
+      "|": Colors.orangeAccent,
+      "^": Colors.orangeAccent,
+      "&": Colors.orangeAccent
     };
 
     return buttonColors[button] ?? Colors.blueAccent;
