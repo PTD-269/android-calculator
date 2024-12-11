@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
 class CurrencyCalculator {
   static const String _baseUrl = 'https://open.er-api.com/v6/latest/USD';
   static Map<String, double> _rates = {};
