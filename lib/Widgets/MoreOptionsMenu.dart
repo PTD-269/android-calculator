@@ -7,7 +7,7 @@ class MoreOptionsMenu extends StatelessWidget {
   MoreOptionsMenu({required this.onOptionSelected});
 
   final List<String> moreOptions = [
-    "Sin", "Cos", "Tan", "Cosin"
+    "sin", "cos", "tan", "cot"
   ];
 
   @override

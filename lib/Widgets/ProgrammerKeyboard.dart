@@ -12,8 +12,8 @@ class ProgrammerKeyboard extends StatelessWidget {
   final List<String> buttons =  [
     "A","^", "|", "~", "&",
     "B", "+" ,"-","*", "/",
-    "C","7", "8", "9"," ", 
-    "D", "4" ,"5","6", " ",
+    "C","7", "8", "9","(", 
+    "D", "4" ,"5","6", ")",
     "E", "1", "2", "3", "Clear",
     "F"," .", "0", "=" ,"DEL"
   ];       

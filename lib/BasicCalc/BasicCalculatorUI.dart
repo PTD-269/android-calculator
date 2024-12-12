@@ -18,7 +18,10 @@ class _BasicCalculatorUIState extends State<BasicCalculatorUI> {
   }
 
   void _calculateResult() {
-    double result = BasicCalculatorHandler.evaluate(_expression);
+    double? result = BasicCalculatorHandler.evaluateExpression(_expression);
+    if (result != null) {
+      result = double.parse(result.toStringAsFixed(4));
+    }
     setState(() {
       _result = result.toString();
       _expression = ''; 
@@ -86,7 +89,8 @@ class _BasicCalculatorUIState extends State<BasicCalculatorUI> {
                   } else if (value == 'C') {
                     _clear();
                   } else if (value == 'More') {
-                    _openMoreFunctions();  
+                    _openMoreFunctions();
+                      
                   } else {
                     _appendToExpression(value);
                   }

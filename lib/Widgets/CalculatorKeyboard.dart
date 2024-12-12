@@ -10,7 +10,7 @@ class CalculatorKeyboard extends StatelessWidget {
   final List<String> buttons = [
     "More",
     "C",
-    "%",
+    "(",
     "/",
     "9",
     "8",
@@ -26,6 +26,7 @@ class CalculatorKeyboard extends StatelessWidget {
     "+",
     "0",
     ".",
+    ")",
     "=",
   ];
 
@@ -40,7 +41,9 @@ class CalculatorKeyboard extends StatelessWidget {
       "x": Colors.orange,
       "-": Colors.orange,
       "+": Colors.orange,
-      "%": Colors.orange
+      "%": Colors.orange,
+      "(":Colors.orange,
+      ")":Colors.orange
     };
 
     return buttonColors[button] ?? Colors.blue;
